@@ -3,12 +3,12 @@ package tripleDES;
 import java.io.*;
 
 /**
- * Created by Paddy-Gaming on 20.11.2015.
+ * Created by Patrick Steinhauer on 20.11.2015.
  */
 public class TripleDES {
 
     private File inputfile;
-    private File outputfile;
+    private File outputfile = new File("C:\\Users\\patri\\Desktop\\3DES\\3DES.pdf");
 
     private DES firstDES;
     private DES secondDES;
@@ -23,25 +23,34 @@ public class TripleDES {
         initialisierungsVektor = new byte[8];
     }
 
-    public void encrypt() throws Exception{
+    /**
+     *  This function is for the encryption with TripleDES.
+     * @throws Exception Exception for streams.
+     */
+    public void decrypt() throws Exception{
         InputStream inputStream = new FileInputStream(inputfile);
         OutputStream outputStream = new FileOutputStream(outputfile);
-        byte[] newBuffer = new byte[8];
-        byte[] readBuffer = new byte[8];
-        byte[] encryptionBuffer = new byte[8];
+
+        byte[] plaintext = new byte[8];
+        byte[] encryptedText = new byte[8];
+        byte[] decryptedText;
 
         // CFB first step with initialization vector
-        firstDES.encrypt(initialisierungsVektor, 0, encryptionBuffer, 0);
-        secondDES.decrypt(encryptionBuffer, 0, encryptionBuffer, 0);
-        thirdDES.encrypt(encryptionBuffer, 0, encryptionBuffer, 0);
-        int lenght;
+        // E(IV, K)
+        firstDES.encrypt(initialisierungsVektor, 0, encryptedText, 0);
+        secondDES.decrypt(encryptedText, 0, encryptedText, 0);
+        thirdDES.encrypt(encryptedText, 0, encryptedText, 0);
 
-        while((lenght = inputStream.read(readBuffer)) > 0) {
-            newBuffer = xor(encryptionBuffer,readBuffer);
-            //Todo High von Kaffee, später  lösen
-            firstDES.encrypt(newBuffer, lenght, encryptionBuffer, lenght);
-            secondDES.decrypt(newBuffer, lenght, encryptionBuffer, lenght);
-            thirdDES.encrypt(encryptionBuffer, lenght, encryptionBuffer, lenght);
+        while((inputStream.read(plaintext)) > 0) {
+
+            // XOR the encrypted text with the next 8 bytes
+            decryptedText = xor(encryptedText, plaintext);
+            outputStream.write(decryptedText);
+
+            // Next Encryption step.
+            firstDES.encrypt(plaintext, 0, encryptedText, 0);
+            secondDES.decrypt(encryptedText, 0, encryptedText, 0);
+            thirdDES.encrypt(encryptedText, 0, encryptedText, 0);
 
         }
 
@@ -49,23 +58,60 @@ public class TripleDES {
         outputStream.close();
     }
 
-    public void decrypt() {
+    public void encrypt() throws Exception{
+        InputStream inputStream = new FileInputStream(inputfile);
+        OutputStream outputStream = new FileOutputStream(outputfile);
 
-    }
+        byte[] plainText = new byte[8];
+        byte[] encryptedText = new byte[8];
 
-    public byte[] xor(byte[] a, byte[] b) {
-        byte[] c = new byte[b.length];
-        for (int i = 0; i < b.length; i++) {
-            c[i] = (byte) (a[i] ^ b[i]);
+        // CFB first step with initialization vector
+        firstDES.encrypt(initialisierungsVektor, 0, encryptedText, 0);
+        secondDES.decrypt(encryptedText, 0, encryptedText, 0);
+        thirdDES.encrypt(encryptedText, 0, encryptedText, 0);
+
+        while((inputStream.read(plainText)) > 0) {
+
+            encryptedText = xor(encryptedText, plainText);
+            outputStream.write(encryptedText);
+            firstDES.encrypt(encryptedText, 0, encryptedText, 0);
+            secondDES.decrypt(encryptedText, 0, encryptedText, 0);
+            thirdDES.encrypt(encryptedText, 0, encryptedText, 0);
         }
-        return c;
+
+        inputStream.close();
+        outputStream.close();
     }
 
+    /**
+     *
+     * @param encryptedText The encryptedText is the random generated value from E((IV, C), K).
+     * @param plainText This text is the next text which has to be encrypted / decrypted with the encryptedText.
+     * @return The return value of this function is the created Chiffretext.
+     */
+    public byte[] xor(byte[] encryptedText, byte[] plainText) {
+        byte[] chiffreText = new byte[8];
+        for (int i = 0; i < 8; i++) {
+            chiffreText[i] = (byte) (encryptedText[i] ^ plainText[i]);
+        }
+        return chiffreText;
+    }
+
+    /**
+     *
+     * @return The initialize vector.
+     */
     public byte[] getInitialisierungsVektor() {
         return initialisierungsVektor;
     }
 
+    /**
+     * Sets the initialize vector for the CFB mode.
+     * @param initialisierungsVektor Initialize vector for the first encryption / decryption step.
+     */
     public void setInitialisierungsVektor(byte[] initialisierungsVektor) {
         this.initialisierungsVektor = initialisierungsVektor;
     }
+
+
 }
