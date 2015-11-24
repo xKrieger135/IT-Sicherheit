@@ -23,6 +23,15 @@ public class TripleDES {
         initialisierungsVektor = new byte[8];
     }
 
+    public TripleDES(long firstKey, long secondKey, long thirdKey, File Input, File Output, byte[] initVector) {
+        this.firstDES = new DES(firstKey);
+        this.secondDES = new DES(secondKey);
+        this.thirdDES = new DES(thirdKey);
+        this.inputfile = Input;
+        this.outputfile = Output;
+        initialisierungsVektor = initVector;
+    }
+
     /**
      *  This function is for the encryption with TripleDES.
      * @throws Exception Exception for streams.

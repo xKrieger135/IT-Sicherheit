@@ -1,5 +1,7 @@
 package GUI;
 
+import tripleDES.TripleDES;
+
 import java.io.*;
 import java.nio.ByteBuffer;
 
@@ -16,13 +18,20 @@ public class CommandLineRunner {
     private static Long secondKey;
     private static Long thirdKey;
     private static Long initVector;
+    private static byte[] initVectorBytes;
 
     public static void main(String[] args) {
         // No Param: view Help
-        if (args.length==0) {printHelp();return;}
+        if (args.length == 0) {
+            printHelp();
+            return;
+        }
 
         //check if arg count is correct
-        if (args.length != 4) {System.out.println("Error: Wrong parameter count!");return;}
+        if (args.length != 4) {
+            System.out.println("Error: Wrong parameter count!");
+            return;
+        }
 
         targetFile = new File(args[0]);
         keyFile = new File(args[1]);
@@ -41,7 +50,8 @@ public class CommandLineRunner {
             firstKey = readLong(keyStream);
             secondKey = readLong(keyStream);
             thirdKey = readLong(keyStream);
-            initVector = readLong(keyStream);
+            //initVector = readLong(keyStream);
+            initVectorBytes = readBytes(keyStream);
         } catch (FileNotFoundException e) {
             //e.printStackTrace();
             System.out.println("Error: Key file not found!");
@@ -53,12 +63,25 @@ public class CommandLineRunner {
         }
 
         System.out.println("Results: ");
-        System.out.println("    Target:     "+targetFile.getAbsolutePath());
-        System.out.println("    Output:     "+outputFile.getAbsolutePath());
-        System.out.println("    First Key:  "+firstKey);
-        System.out.println("    Second Key: "+secondKey);
-        System.out.println("    Third Key:  "+thirdKey);
-        System.out.println("    InitVector: "+initVector);
+        System.out.println("    Target:     " + targetFile.getAbsolutePath());
+        System.out.println("    Output:     " + outputFile.getAbsolutePath());
+        System.out.println("    First Key:  " + firstKey);
+        System.out.println("    Second Key: " + secondKey);
+        System.out.println("    Third Key:  " + thirdKey);
+        //System.out.println("    InitVector: "+initVector);
+
+        TripleDES algo = new TripleDES(firstKey, secondKey, thirdKey, targetFile, outputFile, initVectorBytes);
+        try {
+
+
+            if (operation.equals("encrypt")) {
+                algo.encrypt();
+            } else {
+                algo.decrypt();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return;
     }
 
@@ -85,5 +108,13 @@ public class CommandLineRunner {
             buffer[i] = (byte) stream.read();
         }
         return bytesToLong(buffer);
+    }
+
+    public static byte[] readBytes(InputStream stream) throws IOException {
+        byte[] buffer = new byte[8];
+        for (int i = 0; i < 8; i++) {
+            buffer[i] = (byte) stream.read();
+        }
+        return buffer;
     }
 }
