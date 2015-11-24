@@ -81,11 +81,12 @@ public class TripleDES {
 
         while((inputStream.read(plainText)) > 0) {
 
-            encryptedText = xor(encryptedText, plainText);
-            outputStream.write(encryptedText);
-            firstDES.encrypt(encryptedText, 0, encryptedText, 0);
+            plainText = xor(encryptedText, plainText);
+
+            firstDES.encrypt(plainText, 0, encryptedText, 0);
             secondDES.decrypt(encryptedText, 0, encryptedText, 0);
             thirdDES.encrypt(encryptedText, 0, encryptedText, 0);
+            outputStream.write(plainText);
         }
 
         inputStream.close();
