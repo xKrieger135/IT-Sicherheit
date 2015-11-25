@@ -22,12 +22,12 @@ public class HC1 {
 
     public void crypt() throws Exception {
         InputStream inputStream = new FileInputStream(file.getAbsoluteFile());
-        System.out.println("Out: "+file.getAbsolutePath()+".crypt");
+        System.out.println("Out: "+ file.getAbsolutePath()+".crypt");
 
         OutputStream outputStream = new FileOutputStream(new File(file.getAbsolutePath()+".crypt"));
 
         int pups = inputStream.read();
-        int count =0;
+        int count = 0;
 
         while (pups != -1) {
             int result = pups ^ seed[count % 8];

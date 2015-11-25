@@ -54,12 +54,13 @@ public class TripleDES {
 
             // XOR the encrypted text with the next 8 bytes
             decryptedText = xor(encryptedText, plaintext);
-            outputStream.write(decryptedText);
+
 
             // Next Encryption step.
             firstDES.encrypt(plaintext, 0, encryptedText, 0);
             secondDES.decrypt(encryptedText, 0, encryptedText, 0);
             thirdDES.encrypt(encryptedText, 0, encryptedText, 0);
+            outputStream.write(decryptedText);
 
         }
 
