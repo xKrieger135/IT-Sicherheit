@@ -1,4 +1,4 @@
-package tripleDES;
+package de.haw.tripleDES;
 
 import java.io.*;
 

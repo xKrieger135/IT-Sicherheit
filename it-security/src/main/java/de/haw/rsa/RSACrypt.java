@@ -1,4 +1,4 @@
-package RSA;
+package de.haw.rsa;
 
 import java.security.Key;
 import java.security.KeyPair;
@@ -15,7 +15,7 @@ public class RSACrypt {
     public RSACrypt() {
         KeyPairGenerator kpg = null;
         try {
-            kpg = KeyPairGenerator.getInstance("RSA");
+            kpg = KeyPairGenerator.getInstance("de/haw/chiffre/rsa");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }

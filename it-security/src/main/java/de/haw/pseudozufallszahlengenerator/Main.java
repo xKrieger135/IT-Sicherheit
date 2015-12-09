@@ -1,6 +1,6 @@
-package pseudozufallszahlengenerator;
+package de.haw.pseudozufallszahlengenerator;
 
-import haw.chiffre1.HC1;
+import de.haw.chiffre.HC1;
 
 import javax.swing.*;
 import java.awt.*;

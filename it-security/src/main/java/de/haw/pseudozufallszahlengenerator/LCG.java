@@ -1,4 +1,4 @@
-package pseudozufallszahlengenerator;
+package de.haw.pseudozufallszahlengenerator;
 
 /**
  * Created by Patrick Steinhauer on 20.11.2015.

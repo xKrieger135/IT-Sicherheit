@@ -1,6 +1,6 @@
-package haw.chiffre1;
+package de.haw.chiffre;
 
-import pseudozufallszahlengenerator.LCG;
+import de.haw.pseudozufallszahlengenerator.LCG;
 
 import java.io.*;
 import java.nio.ByteBuffer;

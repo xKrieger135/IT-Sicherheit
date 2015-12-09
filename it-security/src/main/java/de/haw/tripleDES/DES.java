@@ -1,4 +1,4 @@
-package tripleDES;// Copyright (C) 1998-2001 Logi Ragnarsson
+package de.haw.tripleDES;// Copyright (C) 1998-2001 Logi Ragnarsson
 
 import java.util.Random;
 

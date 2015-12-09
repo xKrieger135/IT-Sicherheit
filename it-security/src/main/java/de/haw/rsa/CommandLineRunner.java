@@ -1,4 +1,4 @@
-package RSA;
+package de.haw.rsa;
 
 import java.io.File;
 
