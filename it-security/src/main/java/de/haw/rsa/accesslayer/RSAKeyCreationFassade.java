@@ -2,10 +2,10 @@ package de.haw.rsa.accesslayer;
 
 import de.haw.rsa.accesslayer.interfaces.IRSACreation;
 import de.haw.rsa.businesslogiclayer.RSACreationBusinessLogic;
+import de.haw.rsa.dataaccesslayer.entities.PrivateKey;
+import de.haw.rsa.dataaccesslayer.entities.PublicKey;
 
 import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 
 /**
  * Created by Paddy-Gaming on 09.12.2015.

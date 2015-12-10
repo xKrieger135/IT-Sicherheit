@@ -1,8 +1,9 @@
 package de.haw.rsa.accesslayer.interfaces;
 
+import de.haw.rsa.dataaccesslayer.entities.PrivateKey;
+import de.haw.rsa.dataaccesslayer.entities.PublicKey;
+
 import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 
 /**
  * Created by Patrick Steinhauer on 09.12.2015.
