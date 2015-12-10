@@ -1,4 +1,4 @@
-package de.haw.gui;
+package de.haw.tripleDES;
 
 import de.haw.tripleDES.TripleDES;
 import de.haw.tripleDES.TripleDES;

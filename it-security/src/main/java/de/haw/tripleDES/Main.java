@@ -1,8 +1,5 @@
 package de.haw.tripleDES;
 
-import de.haw.gui.CommandLineRunner;
-import de.haw.gui.CommandLineRunner;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
