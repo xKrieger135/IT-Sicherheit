@@ -1,9 +1,11 @@
 package de.haw.rsa.businesslogiclayer;
 
+import de.haw.rsa.dataaccesslayer.entities.PrivateKey;
+import de.haw.rsa.dataaccesslayer.entities.PublicKey;
+
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 
 /**
  * Created by Patrick Steinhauer on 09.12.2015.
@@ -14,6 +16,11 @@ public class RSACreationBusinessLogic {
 
     }
 
+    /**
+     *
+     * @param keyPairCreationAlgorithm
+     * @return
+     */
     public KeyPair createRSAKeyPair(String keyPairCreationAlgorithm) {
         KeyPair rsaKeyPair = null;
 
@@ -32,11 +39,31 @@ public class RSACreationBusinessLogic {
         return rsaKeyPair;
     }
 
+    /**
+     *
+     * @param publicKeyOwner
+     * @param rsaKeyPair
+     * @return
+     */
     public PublicKey createPublicKey(String publicKeyOwner, KeyPair rsaKeyPair) {
-        PublicKey publicKey = null;
+        PublicKey publicKey = new PublicKey();
 
-        publicKey = rsaKeyPair.getPublic();
+        publicKey.setKey(rsaKeyPair.getPublic().getEncoded());
+        publicKey.setKeyLength(rsaKeyPair.getPublic().getEncoded().length);
+        publicKey.setKeyOwnerName(publicKeyOwner.getBytes());
+        publicKey.setKeyOwnerNameLength(publicKeyOwner.length());
 
         return publicKey;
+    }
+
+    public PrivateKey createPrivateKey(String privateKeyOwnerName, KeyPair rsaKeyPair) {
+        PrivateKey privateKey = new PrivateKey();
+
+        privateKey.setKey(rsaKeyPair.getPrivate().getEncoded());
+        privateKey.setKeyLength(rsaKeyPair.getPrivate().getEncoded().length);
+        privateKey.setKeyOwnerName(privateKeyOwnerName.getBytes());
+        privateKey.setKeyOwnerNameLength(privateKeyOwnerName.length());
+
+        return privateKey;
     }
 }
