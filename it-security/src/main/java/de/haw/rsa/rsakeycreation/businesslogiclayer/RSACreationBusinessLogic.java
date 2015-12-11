@@ -49,9 +49,7 @@ public class RSACreationBusinessLogic {
         PublicKey publicKey = new PublicKey();
 
         publicKey.setKey(rsaKeyPair.getPublic().getEncoded());
-        publicKey.setKeyLength(rsaKeyPair.getPublic().getEncoded().length);
         publicKey.setKeyOwnerName(publicKeyOwner.getBytes());
-        publicKey.setKeyOwnerNameLength(publicKeyOwner.length());
 
         return publicKey;
     }
@@ -60,9 +58,7 @@ public class RSACreationBusinessLogic {
         PrivateKey privateKey = new PrivateKey();
 
         privateKey.setKey(rsaKeyPair.getPrivate().getEncoded());
-        privateKey.setKeyLength(rsaKeyPair.getPrivate().getEncoded().length);
         privateKey.setKeyOwnerName(privateKeyOwnerName.getBytes());
-        privateKey.setKeyOwnerNameLength(privateKeyOwnerName.length());
 
         return privateKey;
     }

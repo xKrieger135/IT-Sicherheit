@@ -6,10 +6,7 @@ import java.security.*;
  * Created by Patrick Steinhauer on 09.12.2015.
  */
 public class PrivateKey {
-
-    private int keyOwnerNameLength;
     private byte[] keyOwnerName;
-    private int keyLength;
     private byte[] key;
 
     public PrivateKey() {
@@ -18,11 +15,7 @@ public class PrivateKey {
     }
 
     public int getKeyOwnerNameLength() {
-        return keyOwnerNameLength;
-    }
-
-    public void setKeyOwnerNameLength(int keyOwnerNameLength) {
-        this.keyOwnerNameLength = keyOwnerNameLength;
+        return keyOwnerName.length;
     }
 
     public byte[] getKeyOwnerName() {
@@ -34,11 +27,7 @@ public class PrivateKey {
     }
 
     public int getKeyLength() {
-        return keyLength;
-    }
-
-    public void setKeyLength(int keyLength) {
-        this.keyLength = keyLength;
+        return key.length;
     }
 
     public byte[] getKey() {

@@ -4,10 +4,7 @@ package de.haw.rsa.rsakeycreation.dataaccesslayer.entities;
  * Created by Patrick Steinhauer on 09.12.2015.
  */
 public class PublicKey {
-
-    private int keyOwnerNameLength;
     private byte[] keyOwnerName;
-    private int keyLength;
     private byte[] key;
 
     public PublicKey() {
@@ -16,11 +13,7 @@ public class PublicKey {
     }
 
     public int getKeyOwnerNameLength() {
-        return keyOwnerNameLength;
-    }
-
-    public void setKeyOwnerNameLength(int keyOwnerNameLength) {
-        this.keyOwnerNameLength = keyOwnerNameLength;
+        return keyOwnerName.length;
     }
 
     public byte[] getKeyOwnerName() {
@@ -32,11 +25,7 @@ public class PublicKey {
     }
 
     public int getKeyLength() {
-        return keyLength;
-    }
-
-    public void setKeyLength(int keyLength) {
-        this.keyLength = keyLength;
+        return key.length;
     }
 
     public byte[] getKey() {
