@@ -1,4 +1,4 @@
-package de.haw.rsa.rsakryptographieadapter.adapter;
+package de.haw.rsa.rsaadapter.adapter;
 
 /**
  * Created by Patrick Steinhauer
