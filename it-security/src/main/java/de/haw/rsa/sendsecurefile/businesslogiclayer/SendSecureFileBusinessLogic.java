@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
+import java.security.SignatureException;
 
 /**
  * Created by Patrick Steinhauer
@@ -34,16 +35,23 @@ public class SendSecureFileBusinessLogic {
         return secretAESKey;
     }
 
-    private Signature createSignatureForSecretAESKey(java.security.PublicKey publicKey) {
+    private Signature createSignatureForSecretAESKey(java.security.PrivateKey privateKey, SecretKey secretKey) {
         Signature rsaSignature = null;
 
         try {
             rsaSignature = Signature.getInstance("SHA256withRSA");
-            rsaSignature.initVerify(publicKey);
+            // Signature should be realized with the private key
+            rsaSignature.initSign(privateKey);
+            // The given data should be signed
+            rsaSignature.update(secretKey.getEncoded());
+
+            rsaSignature.sign();
         } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
             noSuchAlgorithmException.printStackTrace();
         } catch (InvalidKeyException invalidKeyException) {
             invalidKeyException.printStackTrace();
+        } catch (SignatureException signatureException) {
+            signatureException.printStackTrace();
         }
 
         return rsaSignature;
