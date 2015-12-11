@@ -18,7 +18,7 @@ public class RSAKeyCreationWriterAdapter {
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
-    public RSAKeyCreationWriterAdapter(File privateKeyFile, File publicKeyFile, PublicKey publicKey, PrivateKey privateKey) {
+    public RSAKeyCreationWriterAdapter(File privateKeyFile, File publicKeyFile, PrivateKey privateKey, PublicKey publicKey) {
         this.privateKeyFile = privateKeyFile;
         this.publicKeyFile = publicKeyFile;
         this.publicKey = publicKey;
@@ -37,12 +37,12 @@ public class RSAKeyCreationWriterAdapter {
         byte[] keyData = key.getKey();
         DataOutputStream fstream;
 
-        if (file.canWrite()) {
+        //if (file.canWrite()) {
             try {
                 fstream = new DataOutputStream(new FileOutputStream(file));
-                fstream.write(ownerLenght);
+                fstream.writeInt(ownerLenght);
                 fstream.write(ownerData);
-                fstream.write(keyLength);
+                fstream.writeInt(keyLength);
                 fstream.write(keyData);
 
                 fstream.close();
@@ -50,6 +50,6 @@ public class RSAKeyCreationWriterAdapter {
                 System.out.println("Could not write to File " + file.getAbsolutePath());
                 e.printStackTrace();
             }
-        } else System.out.println("File is set to Read Only!");
+        //} else System.out.println("File is set to Read Only!");
     }
 }

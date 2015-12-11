@@ -1,24 +1,80 @@
 package de.haw.rsa;
 
+import de.haw.rsa.rsaadapter.adapter.RSAKeyCreationWriterAdapter;
+import de.haw.rsa.rsaadapter.adapter.RSAKeyReaderAdapter;
+import de.haw.rsa.rsakeycreation.accesslayer.RSAKeyCreationFassade;
+import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PrivateKey;
+import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
+
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * Created by JanDennis on 25.11.2015.
  */
 public class CommandLineRunner {
-    private static File privateKeyFile;
-    private static File publicKeyFile;
+    private static final String name = "Kryptography Tool";
+    private static final String authors = "Patrick Steinhauer & Jan Bartels";
+    private static final String version = "v0.0.1";
+    private static final String publicFileExtension = ".pub";
+    private static final String privateFileExtension = ".prv";
 
     public static void main(String[] args) {
-        if (args.length != 1) {
-            System.out.println("Wrong Parameter count!");
-            return;
+        String[] arguments = args;
+        System.out.println(name + " " + version + " - by " + authors);
+        if (args.length == 0) {
+            arguments = CommandLineHelper.help();
+            System.out.println(Arrays.toString(arguments));
         }
-        String name = args[0];
-        RSACrypt RSA = new RSACrypt();
+        switch (arguments[0]) {
+            case "RSA":
+                startRSA(arguments[1]);
+                break;
+            case "SSF":
+                startSSF();
+                break;
+            case "RSF":
+                startRSF();
+                break;
+            case "DEBUG":
+                startDebug(arguments[1]);
+                break;
+            default:
+                System.out.println("Error, wrong param!");
+                return;
+        }
+    }
 
-        privateKeyFile = new File(name + ".prv");
-        publicKeyFile = new File(name + ".pub");
+    private static void startSSF() {
 
+    }
+
+    private static void startRSF() {
+
+    }
+
+    private static void startRSA(String name) {
+        RSAKeyCreationFassade RSA = new RSAKeyCreationFassade("RSA");
+        File publicKeyFile = new File(name + publicFileExtension);
+        File privateKeyFile = new File(name + privateFileExtension);
+        PublicKey publicKey = RSA.createPublicKey(name);
+        PrivateKey privateKey = RSA.createPrivateKey(name);
+
+        RSAKeyCreationWriterAdapter writerAdapter = new RSAKeyCreationWriterAdapter(privateKeyFile,publicKeyFile,privateKey,publicKey);
+        writerAdapter.createFiles();
+
+        System.out.println(publicKeyFile.getAbsolutePath());
+        System.out.println(System.getProperty("user.dir"));
+        System.out.println("Finished!");
+    }
+    private static void startDebug(String name) {
+        RSAKeyReaderAdapter reader = new RSAKeyReaderAdapter();
+        System.out.println(System.getProperty("user.dir") + "\\" +name + ".prv");
+        java.security.Key first = reader.readPrivateKey(System.getProperty("user.dir") + "\\" +name + ".prv");
+        java.security.Key second = reader.readPublicKey(System.getProperty("user.dir") + "\\" + name + ".pub");
+
+        System.out.println("FIN");
+        System.out.println(first.toString());
+        System.out.println(second.toString());
     }
 }

@@ -17,9 +17,9 @@ public interface IRSACreation {
      * @param keyPairCreationAlgorithm This is the algorithm, which will be used to create the keyPair.
      * @return Returns a KeyPair which contains the public and private key for the RSA algorithm.
      */
-    KeyPair createRSAKeyPair(String keyPairCreationAlgorithm);
+    //KeyPair createRSAKeyPair(String keyPairCreationAlgorithm);
 
-    PublicKey createPublicKey(String publicKeyOwner, KeyPair rsaKeyPair);
+    PublicKey createPublicKey(String publicKeyOwner);
 
-    PrivateKey createPrivateKey(String privateKeyOwner, KeyPair rsaKeyPair);
+    PrivateKey createPrivateKey(String privateKeyOwner);
 }

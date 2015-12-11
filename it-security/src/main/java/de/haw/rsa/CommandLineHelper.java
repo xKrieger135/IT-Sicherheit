@@ -61,6 +61,10 @@ public class CommandLineHelper {
             case "info":
                 showInfo();
                 break;
+            case "debug":
+                returnParameter.add("DEBUG");
+                helpRSA();
+                break;
             default:
                 System.out.println("Input not recognized. Terminating..");
                 break;

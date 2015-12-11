@@ -11,16 +11,17 @@ import java.security.NoSuchAlgorithmException;
  * Created by Patrick Steinhauer on 09.12.2015.
  */
 public class RSACreationBusinessLogic {
+    KeyPair rsaKeyPair;
 
-    public RSACreationBusinessLogic() {
-
+    public RSACreationBusinessLogic(String name) {
+        rsaKeyPair = createRSAKeyPair(name);
     }
 
     /**
      * @param keyPairCreationAlgorithm
      * @return
      */
-    public KeyPair createRSAKeyPair(String keyPairCreationAlgorithm) {
+    private KeyPair createRSAKeyPair(String keyPairCreationAlgorithm) {
         KeyPair rsaKeyPair = null;
 
         try {
@@ -40,10 +41,9 @@ public class RSACreationBusinessLogic {
 
     /**
      * @param publicKeyOwner
-     * @param rsaKeyPair
      * @return
      */
-    public PublicKey createPublicKey(String publicKeyOwner, KeyPair rsaKeyPair) {
+    public PublicKey createPublicKey(String publicKeyOwner) {
         PublicKey publicKey = new PublicKey();
 
         publicKey.setKey(rsaKeyPair.getPublic().getEncoded());
@@ -52,7 +52,7 @@ public class RSACreationBusinessLogic {
         return publicKey;
     }
 
-    public PrivateKey createPrivateKey(String privateKeyOwnerName, KeyPair rsaKeyPair) {
+    public PrivateKey createPrivateKey(String privateKeyOwnerName) {
         PrivateKey privateKey = new PrivateKey();
 
         privateKey.setKey(rsaKeyPair.getPrivate().getEncoded());

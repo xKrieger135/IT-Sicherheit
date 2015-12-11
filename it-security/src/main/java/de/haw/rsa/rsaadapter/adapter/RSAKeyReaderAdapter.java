@@ -11,6 +11,7 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 
 /**
  * Created by Patrick Steinhauer
@@ -38,9 +39,11 @@ public class RSAKeyReaderAdapter {
             // First read the length of keyOwner from file.
             // And initialize the byte array with this length.
             int length = privateKeyFile.readInt();
+            System.out.println("l: "+length);
             privateKeyOwnerBytes = new byte[length];
-            privateKeyFile.read(privateKeyOwnerBytes);
 
+            int a = privateKeyFile.read(privateKeyOwnerBytes);
+            System.out.println("bytes: " + Arrays.toString(privateKeyOwnerBytes));
             privateKey.setKeyOwnerName(privateKeyOwnerBytes);
 
             // Second read the length of key from file.
