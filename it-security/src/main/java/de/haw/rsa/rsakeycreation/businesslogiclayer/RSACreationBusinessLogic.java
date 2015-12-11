@@ -1,7 +1,7 @@
-package de.haw.rsa.businesslogiclayer;
+package de.haw.rsa.rsakeycreation.businesslogiclayer;
 
-import de.haw.rsa.dataaccesslayer.entities.PrivateKey;
-import de.haw.rsa.dataaccesslayer.entities.PublicKey;
+import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PrivateKey;
+import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;

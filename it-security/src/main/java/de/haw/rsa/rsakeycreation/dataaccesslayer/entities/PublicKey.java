@@ -1,18 +1,16 @@
-package de.haw.rsa.dataaccesslayer.entities;
-
-import java.security.*;
+package de.haw.rsa.rsakeycreation.dataaccesslayer.entities;
 
 /**
  * Created by Patrick Steinhauer on 09.12.2015.
  */
-public class PrivateKey {
+public class PublicKey {
 
     private int keyOwnerNameLength;
     private byte[] keyOwnerName;
     private int keyLength;
     private byte[] key;
 
-    public PrivateKey() {
+    public PublicKey() {
         this.keyOwnerName = null;
         this.key = null;
     }
