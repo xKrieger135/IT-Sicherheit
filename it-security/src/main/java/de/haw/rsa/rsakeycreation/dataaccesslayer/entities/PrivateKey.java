@@ -5,7 +5,7 @@ import java.security.*;
 /**
  * Created by Patrick Steinhauer on 09.12.2015.
  */
-public class PrivateKey {
+public class PrivateKey implements Key {
     private byte[] keyOwnerName;
     private byte[] key;
 
