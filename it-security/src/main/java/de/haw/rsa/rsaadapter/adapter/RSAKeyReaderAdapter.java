@@ -68,7 +68,7 @@ public class RSAKeyReaderAdapter {
 //        }
     }
 
-    public void readPublicKey(String fileName) {
+    public PublicKey readPublicKey(String fileName) {
 
         byte[] publicKeyBytes = null;
         byte[] publicKeyOwnerBytes = null;
@@ -82,17 +82,23 @@ public class RSAKeyReaderAdapter {
             publicKeyOwnerBytes = new byte[length];
             publicKeyFile.read(publicKeyOwnerBytes);
 
+            publicKey.setKeyOwnerName(publicKeyOwnerBytes);
+
             // Second read the length of key from file.
             // Also initialize the byte array here.
             length = publicKeyFile.readInt();
             publicKeyBytes = new byte[length];
             publicKeyFile.read(publicKeyBytes);
 
+            publicKey.setKey(publicKeyBytes);
+
             // Close the file.
             publicKeyFile.close();
         } catch (IOException exception) {
             Error("An error occurred while reading the file.", exception);
         }
+
+        return publicKey;
 
 //        try {
 //
