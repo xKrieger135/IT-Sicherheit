@@ -4,7 +4,9 @@ import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.Key;
 import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PrivateKey;
 import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 
 /**
  * Created by Patrick Steinhauer
@@ -24,11 +26,11 @@ public class RSAKeyCreationWriterAdapter {
     }
 
     public void createFiles() {
-        writeToFile(privateKeyFile,privateKey);
-        writeToFile(publicKeyFile,publicKey);
+        writeToFile(privateKeyFile, privateKey);
+        writeToFile(publicKeyFile, publicKey);
     }
 
-    private void writeToFile(File file,Key key) {
+    private void writeToFile(File file, Key key) {
         int ownerLenght = key.getKeyOwnerNameLength();
         byte[] ownerData = key.getKeyOwnerName();
         int keyLength = key.getKeyLength();
@@ -45,7 +47,7 @@ public class RSAKeyCreationWriterAdapter {
 
                 fstream.close();
             } catch (Exception e) {
-                System.out.println("Could not write to File "+file.getAbsolutePath());
+                System.out.println("Could not write to File " + file.getAbsolutePath());
                 e.printStackTrace();
             }
         } else System.out.println("File is set to Read Only!");

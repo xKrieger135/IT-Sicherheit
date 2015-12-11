@@ -4,16 +4,16 @@ package de.haw.rsa.rsakeycreation.dataaccesslayer.entities;
  * Created by JanDennis on 11.12.2015.
  */
 public interface Key {
-     int getKeyOwnerNameLength();
+    int getKeyOwnerNameLength();
 
-     byte[] getKeyOwnerName();
+    byte[] getKeyOwnerName();
 
-     void setKeyOwnerName(byte[] keyOwnerName);
+    void setKeyOwnerName(byte[] keyOwnerName);
 
-     int getKeyLength();
+    int getKeyLength();
 
-     byte[] getKey();
+    byte[] getKey();
 
-     void setKey(byte[] key);
+    void setKey(byte[] key);
 }
 

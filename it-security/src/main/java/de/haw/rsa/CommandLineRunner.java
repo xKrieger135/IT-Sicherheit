@@ -10,15 +10,15 @@ public class CommandLineRunner {
     private static File publicKeyFile;
 
     public static void main(String[] args) {
-        if (args.length!=1) {
+        if (args.length != 1) {
             System.out.println("Wrong Parameter count!");
             return;
         }
         String name = args[0];
         RSACrypt RSA = new RSACrypt();
 
-        privateKeyFile = new File(name+".prv");
-        publicKeyFile = new File(name+".pub");
+        privateKeyFile = new File(name + ".prv");
+        publicKeyFile = new File(name + ".pub");
 
     }
 }

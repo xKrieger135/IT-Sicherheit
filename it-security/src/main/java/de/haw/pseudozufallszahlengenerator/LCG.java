@@ -11,7 +11,6 @@ public class LCG {
     private long m;
 
     /**
-     *
      * @param x0 ist der Startwert fuer den Pseudozufallszahlengenerator.
      */
     public LCG(long x0, long a, long b, long m) {
@@ -25,7 +24,7 @@ public class LCG {
         this.x = x;
         this.a = 65539;
         this.b = 0;
-        this.m = (long) Math.pow(2,32);
+        this.m = (long) Math.pow(2, 32);
     }
 
     public long nextValue() {

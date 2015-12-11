@@ -7,6 +7,6 @@ package de.haw.rsa.sendsecurefile.businesslogiclayer;
 public class SendSecureFileBusinessLogic {
 
     public SendSecureFileBusinessLogic() {
-        
+
     }
 }

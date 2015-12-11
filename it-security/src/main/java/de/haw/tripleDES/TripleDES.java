@@ -35,10 +35,11 @@ public class TripleDES {
     }
 
     /**
-     *  This function is for the encryption with TripleDES.
+     * This function is for the encryption with TripleDES.
+     *
      * @throws Exception Exception for streams.
      */
-    public void decrypt() throws Exception{
+    public void decrypt() throws Exception {
         InputStream inputStream = new FileInputStream(inputfile);
         OutputStream outputStream = new FileOutputStream(outputfile);
 
@@ -52,7 +53,7 @@ public class TripleDES {
         secondDES.decrypt(encryptedText, 0, encryptedText, 0);
         thirdDES.encrypt(encryptedText, 0, encryptedText, 0);
 
-        while((inputStream.read(plaintext)) > 0) {
+        while ((inputStream.read(plaintext)) > 0) {
 
             // XOR the encrypted text with the next 8 bytes
             decryptedText = xor(encryptedText, plaintext);
@@ -70,7 +71,7 @@ public class TripleDES {
         outputStream.close();
     }
 
-    public void encrypt() throws Exception{
+    public void encrypt() throws Exception {
         InputStream inputStream = new FileInputStream(inputfile);
         OutputStream outputStream = new FileOutputStream(outputfile);
 
@@ -82,7 +83,7 @@ public class TripleDES {
         secondDES.decrypt(encryptedText, 0, encryptedText, 0);
         thirdDES.encrypt(encryptedText, 0, encryptedText, 0);
 
-        while((inputStream.read(plainText)) > 0) {
+        while ((inputStream.read(plainText)) > 0) {
 
             plainText = xor(encryptedText, plainText);
 
@@ -97,9 +98,8 @@ public class TripleDES {
     }
 
     /**
-     *
      * @param encryptedText The encryptedText is the random generated value from E((IV, C), K).
-     * @param plainText This text is the next text which has to be encrypted / decrypted with the encryptedText.
+     * @param plainText     This text is the next text which has to be encrypted / decrypted with the encryptedText.
      * @return The return value of this function is the created Chiffretext.
      */
     public byte[] xor(byte[] encryptedText, byte[] plainText) {
@@ -111,7 +111,6 @@ public class TripleDES {
     }
 
     /**
-     *
      * @return The initialize vector.
      */
     public byte[] getInitialisierungsVektor() {
@@ -120,6 +119,7 @@ public class TripleDES {
 
     /**
      * Sets the initialize vector for the CFB mode.
+     *
      * @param initialisierungsVektor Initialize vector for the first encryption / decryption step.
      */
     public void setInitialisierungsVektor(byte[] initialisierungsVektor) {

@@ -10,7 +10,7 @@ import java.security.KeyPair;
 /**
  * Created by Paddy-Gaming on 09.12.2015.
  */
-public class RSAKeyCreationFassade implements IRSACreation{
+public class RSAKeyCreationFassade implements IRSACreation {
 
     private RSACreationBusinessLogic rsaCreationBusinessLogic = new RSACreationBusinessLogic();
 

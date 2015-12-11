@@ -8,7 +8,7 @@ import java.io.File;
 /**
  * Created by Paddy-Gaming on 10.12.2015.
  */
-public class TripleDESFassade implements ITripleDES{
+public class TripleDESFassade implements ITripleDES {
 
     private TripleDESBusinessLogic tripleDESBusinessLogic = null;
 
@@ -16,11 +16,11 @@ public class TripleDESFassade implements ITripleDES{
         this.tripleDESBusinessLogic = tripleDESBusinessLogic;
     }
 
-    public void encrypt(File inputFile, File outputFile) throws Exception{
+    public void encrypt(File inputFile, File outputFile) throws Exception {
         tripleDESBusinessLogic.encryptFile(inputFile, outputFile);
     }
 
-    public void decrypt(File inputFile, File outputFile) throws Exception{
+    public void decrypt(File inputFile, File outputFile) throws Exception {
         tripleDESBusinessLogic.decryptFile(inputFile, outputFile);
     }
 }

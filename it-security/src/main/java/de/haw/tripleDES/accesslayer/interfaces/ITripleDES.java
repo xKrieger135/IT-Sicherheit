@@ -13,7 +13,6 @@ public interface ITripleDES {
      *
      * @param inputFile  The given inputFile, which should be encrypted.
      * @param outputFile The given outputFile, which represents the encrypted inputFile.
-     *
      */
     void encrypt(File inputFile, File outputFile) throws Exception;
 
@@ -23,7 +22,6 @@ public interface ITripleDES {
      *
      * @param inputFile  The given inputFile, which should be encrypted.
      * @param outputFile The given outputFile, which represents the encrypted inputFile.
-     *
      */
     void decrypt(File inputFile, File outputFile) throws Exception;
 }

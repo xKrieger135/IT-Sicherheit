@@ -20,7 +20,6 @@ public class TripleDES {
     }
 
     /**
-     *
      * @return
      */
     public DES getFirstDES() {
@@ -28,7 +27,6 @@ public class TripleDES {
     }
 
     /**
-     *
      * @return
      */
     public DES getSecondDES() {
@@ -36,7 +34,6 @@ public class TripleDES {
     }
 
     /**
-     *
      * @return
      */
     public DES getThirdDES() {
@@ -44,7 +41,6 @@ public class TripleDES {
     }
 
     /**
-     *
      * @return
      */
     public byte[] getInitializeVector() {

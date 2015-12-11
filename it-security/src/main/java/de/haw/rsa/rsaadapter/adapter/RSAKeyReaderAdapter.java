@@ -6,11 +6,6 @@ import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 
 /**
  * Created by Patrick Steinhauer
@@ -120,7 +115,6 @@ public class RSAKeyReaderAdapter {
      *
      * @param msg eine Beschreibung fuer den Fehler
      * @param ex  die Ausnahme, die den Fehler ausgeloest hat
-     *
      */
     private void Error(String msg, Exception ex) {
         System.out.println(msg);

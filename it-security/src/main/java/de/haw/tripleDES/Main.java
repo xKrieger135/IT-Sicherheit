@@ -11,7 +11,7 @@ import java.io.InputStream;
  */
 public class Main {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         long init;
         long first;
         long second;

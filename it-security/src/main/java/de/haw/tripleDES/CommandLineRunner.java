@@ -1,8 +1,5 @@
 package de.haw.tripleDES;
 
-import de.haw.tripleDES.TripleDES;
-import de.haw.tripleDES.TripleDES;
-
 import java.io.*;
 import java.nio.ByteBuffer;
 

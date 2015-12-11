@@ -30,9 +30,8 @@ public class TripleDESBusinessLogic {
      * @param outputFile The given outputFile will contain the encrypted result from the inputFile.
      * @throws Exception This Exception will be thrown, when something went wrong with the FileInputStream or the
      *                   FileOutputStream.
-     *
      */
-    public void encryptFile(File inputFile, File outputFile) throws Exception{
+    public void encryptFile(File inputFile, File outputFile) throws Exception {
 
         InputStream inputStream = new FileInputStream(inputFile);
         OutputStream outputStream = new FileOutputStream(outputFile);
@@ -50,7 +49,7 @@ public class TripleDESBusinessLogic {
         secondDES.decrypt(encryptedText, 0, encryptedText, 0);
         thirdDES.encrypt(encryptedText, 0, encryptedText, 0);
 
-        while((inputStream.read(plaintext)) > 0) {
+        while ((inputStream.read(plaintext)) > 0) {
 
             // XOR the encrypted text with the next 8 bytes
             plaintext = xor(encryptedText, plaintext);
@@ -74,9 +73,8 @@ public class TripleDESBusinessLogic {
      * @param outputFile The given outputFile will contain the decrypted result from the inputFile.
      * @throws Exception This Exception will be thrown, when something went wrong with the FileInputStream or the
      *                   FileOutputStream.
-     *
      */
-    public void decryptFile(File inputFile, File outputFile) throws Exception{
+    public void decryptFile(File inputFile, File outputFile) throws Exception {
 
         InputStream inputStream = new FileInputStream(inputFile);
         OutputStream outputStream = new FileOutputStream(outputFile);
@@ -95,7 +93,7 @@ public class TripleDESBusinessLogic {
         secondDES.decrypt(encryptedText, 0, encryptedText, 0);
         thirdDES.encrypt(encryptedText, 0, encryptedText, 0);
 
-        while((inputStream.read(plaintext)) > 0) {
+        while ((inputStream.read(plaintext)) > 0) {
 
             // XOR the encrypted text with the next 8 bytes
             decryptedText = xor(encryptedText, plaintext);
@@ -114,12 +112,11 @@ public class TripleDESBusinessLogic {
     /**
      * This method will realize the tripleDES algorithm. Every given DES is used for a special step.
      *
-     * @param firstDES   The firstDES is there to encrypt with a given key.
-     * @param secondDES  The secondDES is used to decrypt with a given key.
-     * @param thirdDES   The thirdDES is used to encrypt again with a given key.
-     * @param input      The given input is the buffer where the input text is stored.
-     * @param output     The output is a buffer where the encrypted/decrypted text will be stored.
-     *
+     * @param firstDES  The firstDES is there to encrypt with a given key.
+     * @param secondDES The secondDES is used to decrypt with a given key.
+     * @param thirdDES  The thirdDES is used to encrypt again with a given key.
+     * @param input     The given input is the buffer where the input text is stored.
+     * @param output    The output is a buffer where the encrypted/decrypted text will be stored.
      */
     private void encryptDecryptEncrypt(DES firstDES, DES secondDES, DES thirdDES, byte[] input, byte[] output) {
         firstDES.encrypt(input, 0, output, 0);
@@ -128,12 +125,9 @@ public class TripleDESBusinessLogic {
     }
 
     /**
-     *
-     *
      * @param encryptedText The encryptedText is the random generated value from E((IV, C), K).
-     * @param plainText This text is the next text which has to be encrypted / decrypted with the encryptedText.
+     * @param plainText     This text is the next text which has to be encrypted / decrypted with the encryptedText.
      * @return The return value of this function is the created Chiffretext.
-     *
      */
     private byte[] xor(byte[] encryptedText, byte[] plainText) {
         byte[] chiffreText = new byte[8];

@@ -29,11 +29,11 @@ public class Main {
         FileDialog fd = new FileDialog(new JFrame("wurstgeschwader"));
         fd.show();
 
-        File file = new File(fd.getDirectory()+fd.getFile());
+        File file = new File(fd.getDirectory() + fd.getFile());
 
-        System.out.println("IN: "+file.toString() +"  -E: "+file.exists());
+        System.out.println("IN: " + file.toString() + "  -E: " + file.exists());
 
-        HC1 hawChiffre = new HC1(key,file);
+        HC1 hawChiffre = new HC1(key, file);
 
         try {
             hawChiffre.crypt();
