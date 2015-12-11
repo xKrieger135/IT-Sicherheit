@@ -1,12 +1,13 @@
 package de.haw.rsa.rsaadapter.adapter;
 
+import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PrivateKey;
+import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
+
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -21,10 +22,11 @@ public class RSAKeyReaderAdapter {
     private PublicKey publicKey = null;
 
     public RSAKeyReaderAdapter() {
-
+        this.privateKey = new PrivateKey();
+        this.publicKey = new PublicKey();
     }
 
-    public void readPrivateKey(String fileName) {
+    public PrivateKey readPrivateKey(String fileName) {
 
         byte[] privateKeyBytes = null;
         byte[] privateKeyOwnerBytes = null;
@@ -38,11 +40,15 @@ public class RSAKeyReaderAdapter {
             privateKeyOwnerBytes = new byte[length];
             privateKeyFile.read(privateKeyOwnerBytes);
 
+            privateKey.setKeyOwnerName(privateKeyOwnerBytes);
+
             // Second read the length of key from file.
             // Also initialize the byte array here.
             length = privateKeyFile.readInt();
             privateKeyBytes = new byte[length];
             privateKeyFile.read(privateKeyBytes);
+
+            privateKey.setKey(privateKeyBytes);
 
             // Close the file.
             privateKeyFile.close();
@@ -50,19 +56,21 @@ public class RSAKeyReaderAdapter {
             Error("An error occurred while reading the file.", exception);
         }
 
-        try {
+        return privateKey;
 
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-
-            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-
-            privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
-
-        } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
-            Error("The given algorithm is not a valid algorithm!", noSuchAlgorithmException);
-        } catch (InvalidKeySpecException invalidKeySpecException) {
-            Error("The given KeySpec is not correct!", invalidKeySpecException);
-        }
+//        try {
+//
+//            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+//
+//            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+//
+//            privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
+//
+//        } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+//            Error("The given algorithm is not a valid algorithm!", noSuchAlgorithmException);
+//        } catch (InvalidKeySpecException invalidKeySpecException) {
+//            Error("The given KeySpec is not correct!", invalidKeySpecException);
+//        }
     }
 
     public void readPublicKey(String fileName) {
@@ -91,27 +99,19 @@ public class RSAKeyReaderAdapter {
             Error("An error occurred while reading the file.", exception);
         }
 
-        try {
-
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-
-            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKeyBytes);
-
-            publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
-
-        } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
-            Error("The given algorithm is not a valid algorithm!", noSuchAlgorithmException);
-        } catch (InvalidKeySpecException invalidKeySpecException) {
-            Error("The given KeySpec is not correct!", invalidKeySpecException);
-        }
-    }
-
-    public PrivateKey getPrivateKey() {
-        return privateKey;
-    }
-
-    public PublicKey getPublicKey() {
-        return publicKey;
+//        try {
+//
+//            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+//
+//            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKeyBytes);
+//
+//            publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
+//
+//        } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+//            Error("The given algorithm is not a valid algorithm!", noSuchAlgorithmException);
+//        } catch (InvalidKeySpecException invalidKeySpecException) {
+//            Error("The given KeySpec is not correct!", invalidKeySpecException);
+//        }
     }
 
     /**
