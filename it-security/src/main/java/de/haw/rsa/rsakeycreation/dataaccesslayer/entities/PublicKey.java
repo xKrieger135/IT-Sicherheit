@@ -3,7 +3,7 @@ package de.haw.rsa.rsakeycreation.dataaccesslayer.entities;
 /**
  * Created by Patrick Steinhauer on 09.12.2015.
  */
-public class PublicKey {
+public class PublicKey implements Key{
     private byte[] keyOwnerName;
     private byte[] key;
 
