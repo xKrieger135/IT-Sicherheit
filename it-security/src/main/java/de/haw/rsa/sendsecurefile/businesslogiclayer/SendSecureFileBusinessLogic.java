@@ -3,8 +3,7 @@ package de.haw.rsa.sendsecurefile.businesslogiclayer;
 import de.haw.rsa.rsaadapter.adapter.RSAKeyReaderAdapter;
 import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
@@ -55,5 +54,29 @@ public class SendSecureFileBusinessLogic {
         }
 
         return rsaSignature;
+    }
+
+    private byte[] encryptSecretAESKey(java.security.PublicKey publicKey) {
+        byte[] encryptedAESKey = null;
+
+        try {
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+            encryptedAESKey = cipher.doFinal();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        }
+
+        return encryptedAESKey;
     }
 }
