@@ -51,10 +51,10 @@ public class CommandLineRunner {
         RSAKeyReaderAdapter readerAdapter = new RSAKeyReaderAdapter();
         ISendSecureFile SSF = new SendSecureFileFassade(readerAdapter);
 
-        byte[] buff = SSF.encryptFileWithAES(args[1],args[2],args[3]);
+        byte[] buff = SSF.encryptFileWithAES(args[1], args[2], args[3]);
 
-        System.out.println("OUT: \n====\n"+Arrays.toString(buff));
-        System.out.println("SIZE: "+buff.length);
+        System.out.println("OUT: \n====\n" + Arrays.toString(buff));
+        System.out.println("SIZE: " + buff.length);
     }
 
     private static void startRSF() {
@@ -69,18 +69,19 @@ public class CommandLineRunner {
         PublicKey publicKey = RSA.createPublicKey(name);
         PrivateKey privateKey = RSA.createPrivateKey(name);
 
-        RSAKeyCreationAdapter writerAdapter = new RSAKeyCreationAdapter(privateKeyFile,publicKeyFile,privateKey,publicKey);
+        RSAKeyCreationAdapter writerAdapter = new RSAKeyCreationAdapter(privateKeyFile, publicKeyFile, privateKey, publicKey);
         writerAdapter.createFiles();
 
         System.out.println(publicKeyFile.getAbsolutePath());
         System.out.println(System.getProperty("user.dir"));
         System.out.println("Finished!");
     }
+
     private static void startDebug(String name) {
         RSAKeyReaderAdapter reader = new RSAKeyReaderAdapter();
-        System.out.println(System.getProperty("user.dir") + "\\" +name + ".prv");
-        java.security.Key first = reader.readPrivateKey(System.getProperty("user.dir") + "\\" +name + ".prv");
-        java.security.Key second = reader.readPublicKey(System.getProperty("user.dir") + "\\" + name + ".pub");
+        System.out.println(System.getProperty("user.dir") + "\\" + name + ".prv");
+        java.security.Key first = reader.readPrivateKey(System.getProperty("user.dir") + "\\" + name + ".prv").getKey();
+        java.security.Key second = reader.readPublicKey(System.getProperty("user.dir") + "\\" + name + ".pub").getKey();
 
         System.out.println("FIN");
         System.out.println(first.toString());

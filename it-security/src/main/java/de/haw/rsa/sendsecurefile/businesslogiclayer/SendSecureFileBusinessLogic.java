@@ -66,7 +66,7 @@ public class SendSecureFileBusinessLogic {
     }
 
     public AESKey encryptSecretAESKey(PublicKey publicKey, AESKey inputAESKey) {
-            AESKey aesKey = inputAESKey;
+        AESKey aesKey = inputAESKey;
         try {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -89,11 +89,11 @@ public class SendSecureFileBusinessLogic {
     }
 
     public java.security.PublicKey getPublicKey(String fileName) {
-        return rsaKeyReaderAdapter.readPublicKey(fileName);
+        return rsaKeyReaderAdapter.readPublicKey(fileName).getKey();
     }
 
     public PrivateKey getPrivateKey(String fileName) {
-        return rsaKeyReaderAdapter.readPrivateKey(fileName);
+        return rsaKeyReaderAdapter.readPrivateKey(fileName).getKey();
     }
 
     public byte[] encryptFile(PublicKey publicKey, PrivateKey privateKey, String file) {

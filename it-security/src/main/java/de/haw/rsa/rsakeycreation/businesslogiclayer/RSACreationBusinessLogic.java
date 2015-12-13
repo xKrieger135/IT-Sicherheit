@@ -44,19 +44,19 @@ public class RSACreationBusinessLogic {
      * @return
      */
     public PublicKey createPublicKey(String publicKeyOwner) {
-        PublicKey publicKey = new PublicKey();
+        PublicKey publicKey = new PublicKey(rsaKeyPair.getPublic(), publicKeyOwner.getBytes());
 
-        publicKey.setKey(rsaKeyPair.getPublic().getEncoded());
-        publicKey.setKeyOwnerName(publicKeyOwner.getBytes());
+//        publicKey.setKey(rsaKeyPair.getPublic().getEncoded());
+//        publicKey.setKeyOwnerName(publicKeyOwner.getBytes());
 
         return publicKey;
     }
 
     public PrivateKey createPrivateKey(String privateKeyOwnerName) {
-        PrivateKey privateKey = new PrivateKey();
+        PrivateKey privateKey = new PrivateKey(rsaKeyPair.getPrivate(), privateKeyOwnerName.getBytes());
 
-        privateKey.setKey(rsaKeyPair.getPrivate().getEncoded());
-        privateKey.setKeyOwnerName(privateKeyOwnerName.getBytes());
+//        privateKey.setKey(rsaKeyPair.getPrivate().getEncoded());
+//        privateKey.setKeyOwnerName(privateKeyOwnerName.getBytes());
 
         return privateKey;
     }

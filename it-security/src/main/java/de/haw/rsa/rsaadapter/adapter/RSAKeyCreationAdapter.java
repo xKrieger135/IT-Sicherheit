@@ -34,22 +34,22 @@ public class RSAKeyCreationAdapter {
         int ownerLenght = key.getKeyOwnerNameLength();
         byte[] ownerData = key.getKeyOwnerName();
         int keyLength = key.getKeyLength();
-        byte[] keyData = key.getKey();
+        byte[] keyData = key.getKeyEncoded();
         DataOutputStream fstream;
 
         //if (file.canWrite()) {
-            try {
-                fstream = new DataOutputStream(new FileOutputStream(file));
-                fstream.writeInt(ownerLenght);
-                fstream.write(ownerData);
-                fstream.writeInt(keyLength);
-                fstream.write(keyData);
+        try {
+            fstream = new DataOutputStream(new FileOutputStream(file));
+            fstream.writeInt(ownerLenght);
+            fstream.write(ownerData);
+            fstream.writeInt(keyLength);
+            fstream.write(keyData);
 
-                fstream.close();
-            } catch (Exception e) {
-                System.out.println("Could not write to File " + file.getAbsolutePath());
-                e.printStackTrace();
-            }
+            fstream.close();
+        } catch (Exception e) {
+            System.out.println("Could not write to File " + file.getAbsolutePath());
+            e.printStackTrace();
+        }
         //} else System.out.println("File is set to Read Only!");
     }
 }

@@ -8,12 +8,14 @@ public interface Key {
 
     byte[] getKeyOwnerName();
 
-    void setKeyOwnerName(byte[] keyOwnerName);
+    //void setKeyOwnerName(byte[] keyOwnerName);
 
     int getKeyLength();
 
-    byte[] getKey();
+    byte[] getKeyEncoded();
 
-    void setKey(byte[] key);
+    java.security.Key getKey();
+
+    //void setKey(byte[] key);
 }
 

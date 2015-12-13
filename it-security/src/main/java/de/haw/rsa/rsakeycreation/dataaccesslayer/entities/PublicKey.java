@@ -4,12 +4,12 @@ package de.haw.rsa.rsakeycreation.dataaccesslayer.entities;
  * Created by Patrick Steinhauer on 09.12.2015.
  */
 public class PublicKey implements Key {
+    java.security.PublicKey publicKey;
     private byte[] keyOwnerName;
-    private byte[] key;
 
-    public PublicKey() {
-        this.keyOwnerName = null;
-        this.key = null;
+    public PublicKey(java.security.PublicKey key, byte[] keyOwnerName) {
+        this.publicKey = key;
+        this.keyOwnerName = keyOwnerName;
     }
 
     public int getKeyOwnerNameLength() {
@@ -20,19 +20,23 @@ public class PublicKey implements Key {
         return keyOwnerName;
     }
 
-    public void setKeyOwnerName(byte[] keyOwnerName) {
+    /*public void setKeyOwnerName(byte[] keyOwnerName) {
         this.keyOwnerName = keyOwnerName;
-    }
+    }*/
 
     public int getKeyLength() {
-        return key.length;
+        return publicKey.getEncoded().length;
     }
 
-    public byte[] getKey() {
-        return key;
+    public byte[] getKeyEncoded() {
+        return publicKey.getEncoded();
     }
 
-    public void setKey(byte[] key) {
-        this.key = key;
+    public java.security.PublicKey getKey() {
+        return publicKey;
     }
+
+   /* public void setKey(java.security.PublicKey key) {
+        this.publicKey = key;
+    }*/
 }
