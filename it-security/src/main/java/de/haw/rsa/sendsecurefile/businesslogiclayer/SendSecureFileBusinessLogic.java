@@ -136,7 +136,7 @@ public class SendSecureFileBusinessLogic {
         return result;
     }
 
-    public File writeToFile(String outputFile, PublicKey publicKey, PrivateKey privateKey) {
+    public void writeToFile(String outputFile, PublicKey publicKey, PrivateKey privateKey) {
 
         AESKey aesKey = createSecretAESKey();
         RSASignature signature = createSignatureForSecretAESKey(privateKey, aesKey);
@@ -145,6 +145,7 @@ public class SendSecureFileBusinessLogic {
         int lengthOfSecretEncryptedAESKey = encryptedAESKey.getSecretKey().length;
         int lengthOfSignature = signature.getSignature().length;
         // TODO: laenge der algorithmischen parameter!
+
         int lengthOfAlgorithmParams = 0;
 
         try {
@@ -154,7 +155,5 @@ public class SendSecureFileBusinessLogic {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-        return null;
     }
 }

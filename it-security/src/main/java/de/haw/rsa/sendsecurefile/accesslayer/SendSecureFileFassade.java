@@ -26,11 +26,11 @@ public class SendSecureFileFassade implements ISendSecureFile {
         return sendSecureFileBusinessLogic.encryptFile(publicKey, privateKey, file);
     }
 
-    public File writeToFile(String outputFile, String publicKeyFile, String privateKeyFile) {
+    public void writeToFile(String outputFile, String publicKeyFile, String privateKeyFile) {
         PublicKey publicKey = sendSecureFileBusinessLogic.getPublicKey(publicKeyFile);
         PrivateKey privateKey = sendSecureFileBusinessLogic.getPrivateKey(privateKeyFile);
 
-        File SSFFile = sendSecureFileBusinessLogic.writeToFile(outputFile, publicKey, privateKey);
-        return SSFFile;
+        sendSecureFileBusinessLogic.writeToFile(outputFile, publicKey, privateKey);
+
     }
 }
