@@ -1,10 +1,12 @@
 package de.haw.rsa;
 
-import de.haw.rsa.rsaadapter.adapter.RSAKeyCreationWriterAdapter;
+import de.haw.rsa.rsaadapter.adapter.RSAKeyCreationAdapter;
 import de.haw.rsa.rsaadapter.adapter.RSAKeyReaderAdapter;
 import de.haw.rsa.rsakeycreation.accesslayer.RSAKeyCreationFassade;
 import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PrivateKey;
 import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
+import de.haw.rsa.sendsecurefile.accesslayer.SendSecureFileFassade;
+import de.haw.rsa.sendsecurefile.accesslayer.interfaces.ISendSecureFile;
 
 import java.io.File;
 import java.util.Arrays;
@@ -31,7 +33,7 @@ public class CommandLineRunner {
                 startRSA(arguments[1]);
                 break;
             case "SSF":
-                startSSF();
+                startSSF(arguments);
                 break;
             case "RSF":
                 startRSF();
@@ -45,11 +47,18 @@ public class CommandLineRunner {
         }
     }
 
-    private static void startSSF() {
+    private static void startSSF(String[] args) {
+        RSAKeyReaderAdapter readerAdapter = new RSAKeyReaderAdapter();
+        ISendSecureFile SSF = new SendSecureFileFassade(readerAdapter);
 
+        byte[] buff = SSF.encryptFileWithAES(args[1],args[2],args[3]);
+
+        System.out.println("OUT: \n====\n"+Arrays.toString(buff));
+        System.out.println("SIZE: "+buff.length);
     }
 
     private static void startRSF() {
+
 
     }
 
@@ -60,7 +69,7 @@ public class CommandLineRunner {
         PublicKey publicKey = RSA.createPublicKey(name);
         PrivateKey privateKey = RSA.createPrivateKey(name);
 
-        RSAKeyCreationWriterAdapter writerAdapter = new RSAKeyCreationWriterAdapter(privateKeyFile,publicKeyFile,privateKey,publicKey);
+        RSAKeyCreationAdapter writerAdapter = new RSAKeyCreationAdapter(privateKeyFile,publicKeyFile,privateKey,publicKey);
         writerAdapter.createFiles();
 
         System.out.println(publicKeyFile.getAbsolutePath());

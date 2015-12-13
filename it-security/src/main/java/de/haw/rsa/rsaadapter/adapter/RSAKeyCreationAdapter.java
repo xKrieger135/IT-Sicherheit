@@ -12,13 +12,13 @@ import java.io.FileOutputStream;
  * Created by Patrick Steinhauer
  * On 11.Dez.2015
  */
-public class RSAKeyCreationWriterAdapter {
+public class RSAKeyCreationAdapter {
     private File privateKeyFile;
     private File publicKeyFile;
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
-    public RSAKeyCreationWriterAdapter(File privateKeyFile, File publicKeyFile, PrivateKey privateKey, PublicKey publicKey) {
+    public RSAKeyCreationAdapter(File privateKeyFile, File publicKeyFile, PrivateKey privateKey, PublicKey publicKey) {
         this.privateKeyFile = privateKeyFile;
         this.publicKeyFile = publicKeyFile;
         this.publicKey = publicKey;
