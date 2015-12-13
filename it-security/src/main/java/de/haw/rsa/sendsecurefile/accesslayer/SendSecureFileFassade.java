@@ -20,7 +20,7 @@ public class SendSecureFileFassade implements ISendSecureFile {
         this.sendSecureFileBusinessLogic = new SendSecureFileBusinessLogic(rsaKeyReaderAdapter);
     }
 
-    public File encryptFileWithAES(String privateKeyFile, String publicKeyFile, String file) {
+    public byte[] encryptFileWithAES(String privateKeyFile, String publicKeyFile, String file) {
         PublicKey publicKey = sendSecureFileBusinessLogic.getPublicKey(publicKeyFile);
         PrivateKey privateKey = sendSecureFileBusinessLogic.getPrivateKey(privateKeyFile);
         return sendSecureFileBusinessLogic.encryptFile(publicKey, privateKey, file);

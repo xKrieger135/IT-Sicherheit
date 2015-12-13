@@ -6,10 +6,7 @@ import de.haw.rsa.sendsecurefile.dataaccesslayer.entities.RSASignature;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.security.*;
 
 /**
@@ -71,7 +68,7 @@ public class SendSecureFileBusinessLogic {
     private AESKey encryptSecretAESKey(PublicKey publicKey, AESKey inputAESKey) {
             AESKey aesKey = inputAESKey;
         try {
-            Cipher cipher = Cipher.getInstance("AES");
+            Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
             aesKey.setSecretKeyEncrypted(cipher.doFinal());
@@ -99,18 +96,26 @@ public class SendSecureFileBusinessLogic {
         return rsaKeyReaderAdapter.readPrivateKey(fileName);
     }
 
-    public File encryptFile(PublicKey publicKey, PrivateKey privateKey, String file) {
+    public byte[] encryptFile(PublicKey publicKey, PrivateKey privateKey, String file) {
 
         AESKey aesKey = createSecretAESKey();
+        File newFile = new File(file);
+        byte[] result = null;
 
         try {
 
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
-            Cipher cipher = Cipher.getInstance("AES/CTR");
+            Cipher cipher = Cipher.getInstance("AES/CTR/PKCS5Padding");
 
             SecretKeySpec secretKeySpec = new SecretKeySpec(aesKey.getSecretKey(), "AES");
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
-            
+
+            int length = (int) newFile.length();
+            byte[] buffer = new byte[length];
+            dataInputStream.read(buffer, 0, length);
+            dataInputStream.close();
+
+            result = cipher.doFinal(buffer);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -120,6 +125,14 @@ public class SendSecureFileBusinessLogic {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
         }
+
+        return result;
     }
 }

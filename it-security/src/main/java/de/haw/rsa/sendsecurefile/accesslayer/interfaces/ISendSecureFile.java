@@ -8,6 +8,6 @@ import java.io.File;
  */
 public interface ISendSecureFile {
 
-    File encryptFileWithAES(String privateKeyFile, String publicKeyFile, String file);
+    byte[] encryptFileWithAES(String privateKeyFile, String publicKeyFile, String file);
 
 }
