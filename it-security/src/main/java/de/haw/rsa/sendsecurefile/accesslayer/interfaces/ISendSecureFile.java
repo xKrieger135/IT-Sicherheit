@@ -10,4 +10,6 @@ public interface ISendSecureFile {
 
     byte[] encryptFileWithAES(String privateKeyFile, String publicKeyFile, String file);
 
+    File writeToFile(String outputFile, String publicKeyFile, String privateKeyFile);
+
 }

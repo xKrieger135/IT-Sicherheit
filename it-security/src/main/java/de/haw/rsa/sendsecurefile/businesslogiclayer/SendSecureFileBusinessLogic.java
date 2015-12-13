@@ -21,7 +21,7 @@ public class SendSecureFileBusinessLogic {
         this.rsaKeyReaderAdapter = rsaKeyReaderAdapter;
     }
 
-    private AESKey createSecretAESKey() {
+    public AESKey createSecretAESKey() {
         SecretKey secretAESKey = null;
         AESKey aesKey = new AESKey();
 
@@ -40,7 +40,7 @@ public class SendSecureFileBusinessLogic {
         return aesKey;
     }
 
-    private RSASignature createSignatureForSecretAESKey(PrivateKey privateKey, AESKey secretKey) {
+    public RSASignature createSignatureForSecretAESKey(PrivateKey privateKey, AESKey secretKey) {
         Signature signature = null;
         RSASignature rsaSignature = new RSASignature();
 
@@ -65,7 +65,7 @@ public class SendSecureFileBusinessLogic {
         return rsaSignature;
     }
 
-    private AESKey encryptSecretAESKey(PublicKey publicKey, AESKey inputAESKey) {
+    public AESKey encryptSecretAESKey(PublicKey publicKey, AESKey inputAESKey) {
             AESKey aesKey = inputAESKey;
         try {
             Cipher cipher = Cipher.getInstance("RSA");
@@ -134,5 +134,27 @@ public class SendSecureFileBusinessLogic {
         }
 
         return result;
+    }
+
+    public File writeToFile(String outputFile, PublicKey publicKey, PrivateKey privateKey) {
+
+        AESKey aesKey = createSecretAESKey();
+        RSASignature signature = createSignatureForSecretAESKey(privateKey, aesKey);
+        AESKey encryptedAESKey = encryptSecretAESKey(publicKey, aesKey);
+
+        int lengthOfSecretEncryptedAESKey = encryptedAESKey.getSecretKey().length;
+        int lengthOfSignature = signature.getSignature().length;
+        // TODO: laenge der algorithmischen parameter!
+        int lengthOfAlgorithmParams = 0;
+
+        try {
+            DataOutputStream output = new DataOutputStream(new FileOutputStream(outputFile));
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
