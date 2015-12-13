@@ -2,6 +2,8 @@ package de.haw.rsa.sendsecurefile.businesslogiclayer;
 
 import de.haw.rsa.rsaadapter.adapter.RSAKeyReaderAdapter;
 import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
+import de.haw.rsa.sendsecurefile.dataaccesslayer.entities.AESKey;
+import de.haw.rsa.sendsecurefile.dataaccesslayer.entities.RSASignature;
 
 import javax.crypto.*;
 import java.security.InvalidKeyException;
@@ -19,32 +21,39 @@ public class SendSecureFileBusinessLogic {
 
     }
 
-    private SecretKey createSecretAESKey() {
+    private AESKey createSecretAESKey() {
         SecretKey secretAESKey = null;
+        AESKey aesKey = new AESKey();
 
         try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
             keyGenerator.init(128);
 
             secretAESKey = keyGenerator.generateKey();
+
+            aesKey.setAlgorithm(secretAESKey.getAlgorithm());
+            aesKey.setSecretKey(secretAESKey.getEncoded());
         } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
             noSuchAlgorithmException.printStackTrace();
         }
 
-        return secretAESKey;
+        return aesKey;
     }
 
-    private Signature createSignatureForSecretAESKey(java.security.PrivateKey privateKey, SecretKey secretKey) {
-        Signature rsaSignature = null;
+    private RSASignature createSignatureForSecretAESKey(java.security.PrivateKey privateKey, AESKey secretKey) {
+        Signature signature = null;
+        RSASignature rsaSignature = new RSASignature();
 
         try {
-            rsaSignature = Signature.getInstance("SHA256withRSA");
+            signature = Signature.getInstance("SHA256withRSA");
             // Signature should be realized with the private key
-            rsaSignature.initSign(privateKey);
+            signature.initSign(privateKey);
             // The given data should be signed
-            rsaSignature.update(secretKey.getEncoded());
+            signature.update(secretKey.getSecretKey());
 
-            rsaSignature.sign();
+            rsaSignature.setSignature(signature.sign());
+            rsaSignature.setAlgorithm(signature.getAlgorithm());
+            rsaSignature.setProvider(signature.getProvider());
         } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
             noSuchAlgorithmException.printStackTrace();
         } catch (InvalidKeyException invalidKeyException) {
@@ -56,14 +65,13 @@ public class SendSecureFileBusinessLogic {
         return rsaSignature;
     }
 
-    private byte[] encryptSecretAESKey(java.security.PublicKey publicKey) {
-        byte[] encryptedAESKey = null;
+    private AESKey encryptSecretAESKey(java.security.PublicKey publicKey, AESKey aesKey) {
 
         try {
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
-            encryptedAESKey = cipher.doFinal();
+            aesKey.setSecretKeyEncrypted(cipher.doFinal());
 
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -77,6 +85,6 @@ public class SendSecureFileBusinessLogic {
             e.printStackTrace();
         }
 
-        return encryptedAESKey;
+        return aesKey;
     }
 }
