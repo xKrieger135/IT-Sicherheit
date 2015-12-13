@@ -1,15 +1,16 @@
 package de.haw.rsa.sendsecurefile.businesslogiclayer;
 
 import de.haw.rsa.rsaadapter.adapter.RSAKeyReaderAdapter;
-import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
 import de.haw.rsa.sendsecurefile.dataaccesslayer.entities.AESKey;
 import de.haw.rsa.sendsecurefile.dataaccesslayer.entities.RSASignature;
 
 import javax.crypto.*;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
-import java.security.SignatureException;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.security.*;
 
 /**
  * Created by Patrick Steinhauer
@@ -17,8 +18,10 @@ import java.security.SignatureException;
  */
 public class SendSecureFileBusinessLogic {
 
-    public SendSecureFileBusinessLogic() {
+    private RSAKeyReaderAdapter rsaKeyReaderAdapter = null;
 
+    public SendSecureFileBusinessLogic(RSAKeyReaderAdapter rsaKeyReaderAdapter) {
+        this.rsaKeyReaderAdapter = rsaKeyReaderAdapter;
     }
 
     private AESKey createSecretAESKey() {
@@ -40,7 +43,7 @@ public class SendSecureFileBusinessLogic {
         return aesKey;
     }
 
-    private RSASignature createSignatureForSecretAESKey(java.security.PrivateKey privateKey, AESKey secretKey) {
+    private RSASignature createSignatureForSecretAESKey(PrivateKey privateKey, AESKey secretKey) {
         Signature signature = null;
         RSASignature rsaSignature = new RSASignature();
 
@@ -65,8 +68,8 @@ public class SendSecureFileBusinessLogic {
         return rsaSignature;
     }
 
-    private AESKey encryptSecretAESKey(java.security.PublicKey publicKey, AESKey aesKey) {
-
+    private AESKey encryptSecretAESKey(PublicKey publicKey, AESKey inputAESKey) {
+            AESKey aesKey = inputAESKey;
         try {
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -86,5 +89,37 @@ public class SendSecureFileBusinessLogic {
         }
 
         return aesKey;
+    }
+
+    public java.security.PublicKey getPublicKey(String fileName) {
+        return rsaKeyReaderAdapter.readPublicKey(fileName);
+    }
+
+    public PrivateKey getPrivateKey(String fileName) {
+        return rsaKeyReaderAdapter.readPrivateKey(fileName);
+    }
+
+    public File encryptFile(PublicKey publicKey, PrivateKey privateKey, String file) {
+
+        AESKey aesKey = createSecretAESKey();
+
+        try {
+
+            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
+            Cipher cipher = Cipher.getInstance("AES/CTR");
+
+            SecretKeySpec secretKeySpec = new SecretKeySpec(aesKey.getSecretKey(), "AES");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+            
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
     }
 }

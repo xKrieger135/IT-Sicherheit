@@ -1,12 +1,12 @@
 package de.haw.rsa.sendsecurefile.accesslayer;
 
 import de.haw.rsa.rsaadapter.adapter.RSAKeyReaderAdapter;
-import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PrivateKey;
-import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
 import de.haw.rsa.sendsecurefile.accesslayer.interfaces.ISendSecureFile;
 import de.haw.rsa.sendsecurefile.businesslogiclayer.SendSecureFileBusinessLogic;
 
 import java.io.File;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 /**
  * Created by Patrick Steinhauer
@@ -15,24 +15,14 @@ import java.io.File;
 public class SendSecureFileFassade implements ISendSecureFile {
 
     private SendSecureFileBusinessLogic sendSecureFileBusinessLogic = null;
-    private RSAKeyReaderAdapter rsaKeyReaderAdapter = null;
 
     public SendSecureFileFassade(RSAKeyReaderAdapter rsaKeyReaderAdapter) {
-        this.sendSecureFileBusinessLogic = new SendSecureFileBusinessLogic();
-        this.rsaKeyReaderAdapter = rsaKeyReaderAdapter;
+        this.sendSecureFileBusinessLogic = new SendSecureFileBusinessLogic(rsaKeyReaderAdapter);
     }
 
-    public File encryptFileWithAES() {
-        return null;
+    public File encryptFileWithAES(String privateKeyFile, String publicKeyFile, String file) {
+        PublicKey publicKey = sendSecureFileBusinessLogic.getPublicKey(publicKeyFile);
+        PrivateKey privateKey = sendSecureFileBusinessLogic.getPrivateKey(privateKeyFile);
+        return sendSecureFileBusinessLogic.encryptFile(publicKey, privateKey, file);
     }
-
-    public PublicKey getPublicKey() {
-        return null;
-    }
-
-    public PrivateKey getPrivateKey() {
-        return null;
-    }
-
-
 }

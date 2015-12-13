@@ -1,8 +1,5 @@
 package de.haw.rsa.sendsecurefile.accesslayer.interfaces;
 
-import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PrivateKey;
-import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
-
 import java.io.File;
 
 /**
@@ -11,10 +8,6 @@ import java.io.File;
  */
 public interface ISendSecureFile {
 
-    File encryptFileWithAES();
-
-    PublicKey getPublicKey();
-
-    PrivateKey getPrivateKey();
+    File encryptFileWithAES(String privateKeyFile, String publicKeyFile, String file);
 
 }
