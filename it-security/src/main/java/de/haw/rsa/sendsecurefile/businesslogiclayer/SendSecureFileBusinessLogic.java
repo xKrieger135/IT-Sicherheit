@@ -18,6 +18,7 @@ import java.security.*;
 public class SendSecureFileBusinessLogic {
 
     private RSAKeyReaderAdapter rsaKeyReaderAdapter = null;
+    private byte[] params = null;
 
     public SendSecureFileBusinessLogic(RSAKeyReaderAdapter rsaKeyReaderAdapter) {
         this.rsaKeyReaderAdapter = rsaKeyReaderAdapter;
@@ -39,6 +40,7 @@ public class SendSecureFileBusinessLogic {
 
             secretAESKey = keyGenerator.generateKey();
 
+            aesKey.setsKey(secretAESKey);
             aesKey.setAlgorithm(secretAESKey.getAlgorithm());
             aesKey.setSecretKey(secretAESKey.getEncoded());
         } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
@@ -96,7 +98,6 @@ public class SendSecureFileBusinessLogic {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey.getKey());
 
             aesKey.setSecretKeyEncrypted(cipher.doFinal());
-            System.out.println("CIPHER: "+cipher.getParameters().toString());
             aesKey.setAlgorithmParameters(cipher.getParameters());
 
         } catch (NoSuchAlgorithmException e) {
@@ -153,10 +154,14 @@ public class SendSecureFileBusinessLogic {
         try {
 
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(inputFile));
-            Cipher cipher = Cipher.getInstance("AES/CTR/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
 
-            SecretKeySpec secretKeySpec = new SecretKeySpec(aesKey.getSecretKey(), "AES");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+            System.out.println("SECRET KEY = " + aesKey.getsKey());
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey.getsKey());
+
+            params = cipher.getParameters().getEncoded();
+
+            System.out.println("Params = " + params);
 
             int length = (int) newFile.length();
             byte[] buffer = new byte[length];
@@ -164,6 +169,7 @@ public class SendSecureFileBusinessLogic {
             dataInputStream.close();
 
             result = cipher.doFinal(buffer);
+
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -203,26 +209,20 @@ public class SendSecureFileBusinessLogic {
 
         AESKey aesKey = createSecretAESKey();
         RSASignature rsaSignature = createSignatureForSecretAESKey(privateKey, aesKey);
-        AESKey newAES = encryptSecretAESKey(publicKey, aesKey);
-        aesKey.setSecretKeyEncrypted(newAES.getSecretKeyEncrypted());
-        aesKey.setAlgorithmParameters(newAES.getAlgorithmParameters());
-
-        System.out.println("DEBUG: " + aesKey.getAlgorithmParameters().toString());
-
-        AlgorithmParameters algorithmParameters = aesKey.getAlgorithmParameters();
-
+        AESKey newAESKey = encryptSecretAESKey(publicKey, aesKey);
+        aesKey.setSecretKeyEncrypted(newAESKey.getSecretKeyEncrypted());
 
         try {
             DataOutputStream output = new DataOutputStream(new FileOutputStream(outputFile));
 
-            int lengthOfSecretEncryptedAESKey = aesKey.getSecretKeyEncrypted().length;
-            int lengthOfSignature = rsaSignature.getSignature().length;
-            int lengthOfAlgorithmParameters = aesKey.getAlgorithmParameters().getEncoded().length;
-
             byte[] key = aesKey.getSecretKeyEncrypted();
             byte[] signature = rsaSignature.getSignature();
-            byte[] parameters = algorithmParameters.getEncoded();
             byte[] encryptedFile = encryptFile(publicKey, privateKey, aesKey, inputFile);
+            byte[] parameters = params;
+
+            int lengthOfSecretEncryptedAESKey = aesKey.getSecretKeyEncrypted().length;
+            int lengthOfSignature = rsaSignature.getSignature().length;
+            int lengthOfAlgorithmParameters = parameters.length;
 
             output.writeInt(lengthOfSecretEncryptedAESKey);
             output.write(key);
@@ -231,6 +231,7 @@ public class SendSecureFileBusinessLogic {
             output.writeInt(lengthOfAlgorithmParameters);
             output.write(parameters);
             output.write(encryptedFile);
+            System.out.println("DONE");
 
             output.close();
 

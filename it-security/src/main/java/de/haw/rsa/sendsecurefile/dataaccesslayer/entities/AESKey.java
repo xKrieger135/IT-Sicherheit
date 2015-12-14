@@ -1,5 +1,6 @@
 package de.haw.rsa.sendsecurefile.dataaccesslayer.entities;
 
+import javax.crypto.SecretKey;
 import java.security.AlgorithmParameters;
 
 /**
@@ -12,10 +13,12 @@ public class AESKey {
     private byte[] secretKeyEncrypted;
     private String algorithm;
     private AlgorithmParameters algorithmParameters;
+    private SecretKey sKey;
 
     public AESKey() {
         this.secretKey = null;
         this.secretKeyEncrypted = null;
+        this.sKey = null;
     }
 
     /**
@@ -88,5 +91,13 @@ public class AESKey {
      */
     public void setAlgorithmParameters(AlgorithmParameters algorithmParameters) {
         this.algorithmParameters = algorithmParameters;
+    }
+
+    public SecretKey getsKey() {
+        return sKey;
+    }
+
+    public void setsKey(SecretKey sKey) {
+        this.sKey = sKey;
     }
 }
