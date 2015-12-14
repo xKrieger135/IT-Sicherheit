@@ -10,6 +10,7 @@ import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.security.*;
+import java.util.Arrays;
 
 /**
  * Created by Patrick Steinhauer
@@ -96,8 +97,9 @@ public class SendSecureFileBusinessLogic {
         try {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey.getKey());
+            byte[] sinnvollerName = cipher.update(aesKey.getSecretKey());
 
-            aesKey.setSecretKeyEncrypted(cipher.doFinal());
+            aesKey.setSecretKeyEncrypted(concatenate(sinnvollerName , cipher.doFinal()));
             aesKey.setAlgorithmParameters(cipher.getParameters());
 
         } catch (NoSuchAlgorithmException e) {
@@ -224,6 +226,9 @@ public class SendSecureFileBusinessLogic {
             int lengthOfSignature = rsaSignature.getSignature().length;
             int lengthOfAlgorithmParameters = parameters.length;
 
+            System.out.println("L: " + lengthOfSecretEncryptedAESKey);
+            System.out.println("D: " + Arrays.toString(key));
+
             output.writeInt(lengthOfSecretEncryptedAESKey);
             output.write(key);
             output.writeInt(lengthOfSignature);
@@ -240,5 +245,17 @@ public class SendSecureFileBusinessLogic {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private byte[] concatenate(byte[] ba1, byte[] ba2) {
+        int len1 = ba1.length;
+        int len2 = ba2.length;
+        byte[] result = new byte[len1 + len2];
+
+        // Fill with first array
+        System.arraycopy(ba1, 0, result, 0, len1);
+        // Fill with second array
+        System.arraycopy(ba2, 0, result, len1, len2);
+
+        return result;
     }
 }

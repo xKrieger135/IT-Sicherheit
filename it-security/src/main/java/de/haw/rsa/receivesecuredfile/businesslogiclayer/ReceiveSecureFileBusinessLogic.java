@@ -13,10 +13,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
-import java.security.SignatureException;
+import java.security.*;
+import java.util.Arrays;
 
 /**
  * Created by JanDennis on 11.12.2015.
@@ -35,8 +33,10 @@ public class ReceiveSecureFileBusinessLogic {
         PublicKey publicKey = rsaKeyReaderAdapter.readPublicKey(publicKeyFile.getAbsolutePath());
         SendSecureFile ssfFile = ssfReaderAdapter.readSSFFile(inputFile);
 
+        System.out.println("SSF FILE CONTENT: \n\n " +ssfFile.toString());
+
         System.out.println("Decrypt Key\n===========\n");
-        AESKey aesKey = decryptAESKey(privateKey);
+        AESKey aesKey = decryptAESKey(privateKey,ssfFile);
 
         System.out.println("Decrypt File\n============\n");
         decryptFile(inputFile, outputFile, aesKey, ssfFile);
@@ -47,7 +47,7 @@ public class ReceiveSecureFileBusinessLogic {
         System.out.println("v " + r);
     }
 
-    private AESKey decryptAESKey(PrivateKey privateKey) {
+    private AESKey decryptAESKey(PrivateKey privateKey, SendSecureFile ssf) {
         AESKey resultKey = null;
         try {
             Cipher cipher = Cipher.getInstance("RSA");
@@ -56,7 +56,17 @@ public class ReceiveSecureFileBusinessLogic {
 
             resultKey = new AESKey();
             resultKey.setAlgorithmParameters(cipher.getParameters());
-            resultKey.setSecretKey(cipher.doFinal());
+
+            byte[] b = cipher.doFinal(ssf.getEncryptedSecretKey());
+
+            System.out.println("B " + Arrays.toString(b));
+
+            resultKey.setSecretKey(b);
+            System.out.println("SSF: " + Arrays.toString(ssf.getEncryptedSecretKey()));
+
+            System.out.println("PrivKey: " + Arrays.toString(privateKey.getKeyEncoded()));
+            System.out.println("SecretKey: " + Arrays.toString(resultKey.getSecretKey()));
+//            System.out.println("Buffer: " + Arrays.toString(buff));
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
@@ -76,10 +86,15 @@ public class ReceiveSecureFileBusinessLogic {
             DataInputStream inputStream = new DataInputStream(new FileInputStream(encryptedFile));
             DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(outputFile));
 
-            Cipher cipher = Cipher.getInstance(ssf.getAlgorithmicParameters().toString());
+            Cipher cipher = Cipher.getInstance("AES");
+
+            AlgorithmParameters algorithmParameters = AlgorithmParameters.getInstance("AES");
+            algorithmParameters.init(ssf.getAlgorithmicParameters());
+
+            System.out.println("SecretKey: "+ Arrays.toString(aesKey.getSecretKey()));
 
             SecretKeySpec keySpec = new SecretKeySpec(aesKey.getSecretKey(), "AES");
-            cipher.init(Cipher.DECRYPT_MODE, keySpec);
+            cipher.init(Cipher.DECRYPT_MODE, keySpec,algorithmParameters);
 
             int length = (int) encryptedFile.length();
             byte[] buffer = new byte[length];
@@ -101,6 +116,8 @@ public class ReceiveSecureFileBusinessLogic {
         } catch (BadPaddingException e) {
             e.printStackTrace();
         } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
     }
