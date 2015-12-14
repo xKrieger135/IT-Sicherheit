@@ -11,15 +11,13 @@ import java.io.File;
  */
 public class ReceiveSecureFileFassade implements IReceiveSecureFile {
     ReceiveSecureFileBusinessLogic businessLogic = null;
-    RSAKeyReaderAdapter keyReaderAdapter = null;
 
     public ReceiveSecureFileFassade() {
         businessLogic = new ReceiveSecureFileBusinessLogic();
-        keyReaderAdapter = new RSAKeyReaderAdapter();
     }
 
     @Override
-    public File decryptFileWithAES(File inputFile) {
-        return null;
+    public void decryptFileWithAES(File privateKeyFile, File publicKeyFile, File inputFile, File outputFile) {
+        businessLogic.decryptFile(privateKeyFile,publicKeyFile,inputFile,outputFile);
     }
 }

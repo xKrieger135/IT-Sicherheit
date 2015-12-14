@@ -84,6 +84,7 @@ public class RSAKeyReaderAdapter {
      * @return         Returns the public RSA key.
      */
     public PublicKey readPublicKey(String fileName) {
+        System.out.println("Read file: " + fileName);
         PublicKey publicKey = null;
 
         java.security.PublicKey pk = null;
@@ -140,7 +141,7 @@ public class RSAKeyReaderAdapter {
      */
     private void Error(String msg, Exception ex) {
         System.out.println(msg);
-        System.out.println(ex.getMessage());
+        ex.printStackTrace();
         System.exit(0);
     }
 

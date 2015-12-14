@@ -1,5 +1,7 @@
 package de.haw.rsa;
 
+import de.haw.rsa.receivesecuredfile.accesslayer.ReceiveSecureFileFassade;
+import de.haw.rsa.receivesecuredfile.accesslayer.interfaces.IReceiveSecureFile;
 import de.haw.rsa.rsaadapter.adapter.RSAKeyCreationAdapter;
 import de.haw.rsa.rsaadapter.adapter.RSAKeyReaderAdapter;
 import de.haw.rsa.rsakeycreation.accesslayer.RSAKeyCreationFassade;
@@ -36,7 +38,7 @@ public class CommandLineRunner {
                 startSSF(arguments);
                 break;
             case "RSF":
-                startRSF();
+                startRSF(arguments);
                 break;
             case "DEBUG":
                 startDebug(arguments[1]);
@@ -51,13 +53,16 @@ public class CommandLineRunner {
         RSAKeyReaderAdapter readerAdapter = new RSAKeyReaderAdapter();
         ISendSecureFile SSF = new SendSecureFileFassade(readerAdapter);
 
-        byte[] buff = SSF.encryptFileWithAES(args[1], args[2], args[3]);
-
-        System.out.println("OUT: \n====\n" + Arrays.toString(buff));
-        System.out.println("SIZE: " + buff.length);
+        SSF.writeToFile(args[3], args[4], args[2],args[1]);
+//        byte[] buff = SSF.encryptFileWithAES(args[1], args[2], args[3]);
+//
+//        System.out.println("OUT: \n====\n" + Arrays.toString(buff));
+//        System.out.println("SIZE: " + buff.length);
     }
 
-    private static void startRSF() {
+    private static void startRSF(String[] args) {
+        IReceiveSecureFile rsf = new ReceiveSecureFileFassade();
+        rsf.decryptFileWithAES(new File(args[1]),new File(args[2]),new File(args[3]),new File(args[4]));
 
 
     }

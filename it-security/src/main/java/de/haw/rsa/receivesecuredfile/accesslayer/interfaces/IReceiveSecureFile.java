@@ -7,5 +7,12 @@ import java.io.File;
  */
 public interface IReceiveSecureFile {
 
-    File decryptFileWithAES(File inputFile);
+    /**
+     * Decrypts a File.
+     * @param privateKeyFile
+     * @param publicKeyFile
+     * @param inputFile
+     * @param outputFile
+     */
+    void decryptFileWithAES(File privateKeyFile, File publicKeyFile, File inputFile, File outputFile);
 }

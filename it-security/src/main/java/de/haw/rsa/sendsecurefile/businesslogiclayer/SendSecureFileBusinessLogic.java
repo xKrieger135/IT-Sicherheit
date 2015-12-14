@@ -96,6 +96,7 @@ public class SendSecureFileBusinessLogic {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey.getKey());
 
             aesKey.setSecretKeyEncrypted(cipher.doFinal());
+            System.out.println("CIPHER: "+cipher.getParameters().toString());
             aesKey.setAlgorithmParameters(cipher.getParameters());
 
         } catch (NoSuchAlgorithmException e) {
@@ -202,8 +203,14 @@ public class SendSecureFileBusinessLogic {
 
         AESKey aesKey = createSecretAESKey();
         RSASignature rsaSignature = createSignatureForSecretAESKey(privateKey, aesKey);
-        aesKey.setSecretKeyEncrypted(encryptSecretAESKey(publicKey, aesKey).getSecretKeyEncrypted());
+        AESKey newAES = encryptSecretAESKey(publicKey, aesKey);
+        aesKey.setSecretKeyEncrypted(newAES.getSecretKeyEncrypted());
+        aesKey.setAlgorithmParameters(newAES.getAlgorithmParameters());
+
+        System.out.println("DEBUG: " + aesKey.getAlgorithmParameters().toString());
+
         AlgorithmParameters algorithmParameters = aesKey.getAlgorithmParameters();
+
 
         try {
             DataOutputStream output = new DataOutputStream(new FileOutputStream(outputFile));
