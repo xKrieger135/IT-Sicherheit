@@ -37,7 +37,6 @@ public class RSAKeyCreationAdapter {
         byte[] keyData = key.getKeyEncoded();
         DataOutputStream fstream;
 
-        //if (file.canWrite()) {
         try {
             fstream = new DataOutputStream(new FileOutputStream(file));
             fstream.writeInt(ownerLenght);
@@ -50,6 +49,5 @@ public class RSAKeyCreationAdapter {
             System.out.println("Could not write to File " + file.getAbsolutePath());
             e.printStackTrace();
         }
-        //} else System.out.println("File is set to Read Only!");
     }
 }

@@ -16,18 +16,9 @@ public class RSAKeyCreationFassade implements IRSACreation {
         rsaCreationBusinessLogic = new RSACreationBusinessLogic(name);
     }
 
-/*
-    public KeyPair createRSAKeyPair(String keyPairCreationAlgorithm) {
-        KeyPair rsaKeyPair = rsaCreationBusinessLogic.createRSAKeyPair(keyPairCreationAlgorithm);
-
-        return rsaKeyPair;
-    }*/
-
     // TODO: Exceptions wenn keyOwner und / oder rsaKeyPair == null.
     public PublicKey createPublicKey(String publicKeyOwner) {
-        PublicKey publicKey = rsaCreationBusinessLogic.createPublicKey(publicKeyOwner);
-
-        return publicKey;
+        return rsaCreationBusinessLogic.createPublicKey(publicKeyOwner);
     }
 
     // TODO: Exceptions wenn keyOwner und / oder rsaKeyPair == null.

@@ -9,10 +9,7 @@ import de.haw.rsa.sendsecurefile.dataaccesslayer.entities.RSASignature;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
-import java.security.SignatureException;
+import java.security.*;
 
 /**
  * Created by Patrick Steinhauer
@@ -26,6 +23,12 @@ public class SendSecureFileBusinessLogic {
         this.rsaKeyReaderAdapter = rsaKeyReaderAdapter;
     }
 
+    /**
+     * This method creates a secretKey for the algorithm AES.
+     * The created key has the key length of 128 Bit.
+     *
+     * @return Returns the secretAESKey.
+     */
     public AESKey createSecretAESKey() {
         SecretKey secretAESKey = null;
         AESKey aesKey = new AESKey();
@@ -45,6 +48,14 @@ public class SendSecureFileBusinessLogic {
         return aesKey;
     }
 
+    /**
+     * This method creates a signature for the secretAESKey. The creation is realized with the
+     * private RSA key. To create this signature, there is used the "SHA256withRSA" algorithm.
+     *
+     * @param privateKey This is the given private RSA key.
+     * @param secretKey  This is the given secret AES key.
+     * @return           Returns a RSASignature, which contains the signature.
+     */
     public RSASignature createSignatureForSecretAESKey(PrivateKey privateKey, AESKey secretKey) {
         Signature signature = null;
         RSASignature rsaSignature = new RSASignature();
@@ -70,6 +81,14 @@ public class SendSecureFileBusinessLogic {
         return rsaSignature;
     }
 
+    /**
+     * This method encrypts the given secret AES key with a given public RSA key.
+     * The used algorithm here is RSA.
+     *
+     * @param publicKey    The given public RSA key is used to encrypt the secret AES key.
+     * @param inputAESKey  The given secret AES key which will be encrypt.
+     * @return             Returns an AESKey, which contains now the encrypted AESKey.
+     */
     public AESKey encryptSecretAESKey(PublicKey publicKey, AESKey inputAESKey) {
         AESKey aesKey = inputAESKey;
         try {
@@ -94,23 +113,45 @@ public class SendSecureFileBusinessLogic {
         return aesKey;
     }
 
+    /**
+     * This method gets the public RSA key from a given file.
+     *
+     * @param fileName The given fileName as a String.
+     * @return         Returns the public RSA key contained in the given file.
+     */
     public PublicKey getPublicKey(String fileName) {
         return rsaKeyReaderAdapter.readPublicKey(fileName);
     }
 
+    /**
+     * This method gets the private RSA key from a given file.
+     *
+     * @param fileName The given fileName as a String.
+     * @return         Returns the private RSA key contained in the given file.
+     */
     public PrivateKey getPrivateKey(String fileName) {
         return rsaKeyReaderAdapter.readPrivateKey(fileName);
     }
 
-    public byte[] encryptFile(PublicKey publicKey, PrivateKey privateKey, String file) {
+    /**
+     * This method encrypts a given file with the given keys.
+     * There are needed the public RSA key, the private RSA key and the secret AES key.
+     *
+     * @param publicKey   The public RSA key.
+     * @param privateKey  The private RSA key.
+     * @param secretKey   The secret AES key.
+     * @param inputFile   The inputFile, which should be encrypted.
+     * @return            Returns the encrypted data as a byte array.
+     */
+    public byte[] encryptFile(PublicKey publicKey, PrivateKey privateKey, AESKey secretKey, String inputFile) {
 
-        AESKey aesKey = createSecretAESKey();
-        File newFile = new File(file);
+        AESKey aesKey = secretKey;
+        File newFile = new File(inputFile);
         byte[] result = null;
 
         try {
 
-            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
+            DataInputStream dataInputStream = new DataInputStream(new FileInputStream(inputFile));
             Cipher cipher = Cipher.getInstance("AES/CTR/PKCS5Padding");
 
             SecretKeySpec secretKeySpec = new SecretKeySpec(aesKey.getSecretKey(), "AES");
@@ -142,23 +183,53 @@ public class SendSecureFileBusinessLogic {
         return result;
     }
 
-    public void writeToFile(String outputFile, PublicKey publicKey, PrivateKey privateKey) {
+    /**
+     * This method writes all needed data into a file.
+     * 1. The length of the encrypted secret key as an integer.
+     * 2. The encrypted secret key as a byte array.
+     * 3. The length of the signature of the secret key as an integer.
+     * 4. The signature of the secret key as an byte array.
+     * 5. The length of the algorithm parameters of the secret key as an integer.
+     * 6. The algorithm parameters as a byte array.
+     * 7. The encrypted file as a byte array.
+     *
+     * @param inputFile   The given inputFile which will be encrypted.
+     * @param outputFile  The outputFile, where the data will be stored.
+     * @param publicKey   The public RSA key.
+     * @param privateKey  The private RSA key.
+     */
+    public void writeToFile(String inputFile, String outputFile, PublicKey publicKey, PrivateKey privateKey) {
 
         AESKey aesKey = createSecretAESKey();
-        RSASignature signature = createSignatureForSecretAESKey(privateKey, aesKey);
-        AESKey encryptedAESKey = encryptSecretAESKey(publicKey, aesKey);
-
-        int lengthOfSecretEncryptedAESKey = encryptedAESKey.getSecretKey().length;
-        int lengthOfSignature = signature.getSignature().length;
-        // TODO: laenge der algorithmischen parameter!
-
-        int lengthOfAlgorithmParams = 0;
+        RSASignature rsaSignature = createSignatureForSecretAESKey(privateKey, aesKey);
+        aesKey.setSecretKeyEncrypted(encryptSecretAESKey(publicKey, aesKey).getSecretKeyEncrypted());
+        AlgorithmParameters algorithmParameters = aesKey.getAlgorithmParameters();
 
         try {
             DataOutputStream output = new DataOutputStream(new FileOutputStream(outputFile));
 
+            int lengthOfSecretEncryptedAESKey = aesKey.getSecretKeyEncrypted().length;
+            int lengthOfSignature = rsaSignature.getSignature().length;
+            int lengthOfAlgorithmParameters = aesKey.getAlgorithmParameters().getEncoded().length;
+
+            byte[] key = aesKey.getSecretKeyEncrypted();
+            byte[] signature = rsaSignature.getSignature();
+            byte[] parameters = algorithmParameters.getEncoded();
+            byte[] encryptedFile = encryptFile(publicKey, privateKey, aesKey, inputFile);
+
+            output.writeInt(lengthOfSecretEncryptedAESKey);
+            output.write(key);
+            output.writeInt(lengthOfSignature);
+            output.write(signature);
+            output.writeInt(lengthOfAlgorithmParameters);
+            output.write(parameters);
+            output.write(encryptedFile);
+
+            output.close();
 
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -20,14 +20,16 @@ import java.util.Arrays;
  */
 public class RSAKeyReaderAdapter {
 
-//    private de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PrivateKey privateKey = null;
-//    private de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey publicKey = null;
-
     public RSAKeyReaderAdapter() {
-//        this.privateKey = new de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PrivateKey();
-//        this.publicKey = new de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey();
+
     }
 
+    /**
+     * This method will read the private RSA key from a given file.
+     *
+     * @param fileName The given file, which contains the private RSA key.
+     * @return         Returns the private RSA key.
+     */
     public PrivateKey readPrivateKey(String fileName) {
         PrivateKey privateKey = null;
 
@@ -41,12 +43,8 @@ public class RSAKeyReaderAdapter {
             // First read the length of keyOwner from file.
             // And initialize the byte array with this length.
             int length = privateKeyFile.readInt();
-            System.out.println("l: " + length);
             privateKeyOwnerBytes = new byte[length];
-
-            int a = privateKeyFile.read(privateKeyOwnerBytes);
-            System.out.println("bytes: " + Arrays.toString(privateKeyOwnerBytes));
-//            privateKey.setKeyOwnerName(privateKeyOwnerBytes);
+            privateKeyFile.read(privateKeyOwnerBytes);
 
             // Second read the length of key from file.
             // Also initialize the byte array here.
@@ -68,7 +66,6 @@ public class RSAKeyReaderAdapter {
 
             pk = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
 
-//            privateKey.setKey(keyFactory.generatePrivate(pkcs8EncodedKeySpec).getEncoded());
             privateKey = new PrivateKey(pk, privateKeyOwnerBytes);
 
         } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
@@ -80,6 +77,12 @@ public class RSAKeyReaderAdapter {
         return privateKey;
     }
 
+    /**
+     * This method will read the public RSA key from a given file.
+     *
+     * @param fileName The given file, which contains the public RSA key.
+     * @return         Returns the public RSA key.
+     */
     public PublicKey readPublicKey(String fileName) {
         PublicKey publicKey = null;
 
@@ -95,8 +98,6 @@ public class RSAKeyReaderAdapter {
             int length = publicKeyFile.readInt();
             publicKeyOwnerBytes = new byte[length];
             publicKeyFile.read(publicKeyOwnerBytes);
-
-//            publicKey.setKeyOwnerName(publicKeyOwnerBytes);
 
             // Second read the length of key from file.
             // Also initialize the byte array here.
@@ -119,8 +120,6 @@ public class RSAKeyReaderAdapter {
 
             pk = keyFactory.generatePublic(x509EncodedKeySpec);
 
-//            publicKey.setKey(keyFactory.generatePublic(x509EncodedKeySpec).getEncoded());
-
             publicKey = new PublicKey(pk, publicKeyOwnerBytes);
 
         } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
@@ -131,14 +130,6 @@ public class RSAKeyReaderAdapter {
 
         return publicKey;
     }
-
-//    public de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PrivateKey getPrivateKey() {
-//        return privateKey;
-//    }
-
-//    public de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey getPublicKey() {
-//        return publicKey;
-//    }
 
     /**
      * Diese Methode gibt eine Fehlermeldung sowie eine Beschreibung der

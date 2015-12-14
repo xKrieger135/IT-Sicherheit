@@ -12,31 +12,43 @@ public class PublicKey implements Key {
         this.keyOwnerName = keyOwnerName;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getKeyOwnerNameLength() {
         return keyOwnerName.length;
     }
 
+    /**
+     *
+     * @return
+     */
     public byte[] getKeyOwnerName() {
         return keyOwnerName;
     }
 
-    /*public void setKeyOwnerName(byte[] keyOwnerName) {
-        this.keyOwnerName = keyOwnerName;
-    }*/
-
+    /**
+     *
+     * @return
+     */
     public int getKeyLength() {
         return publicKey.getEncoded().length;
     }
 
+    /**
+     *
+     * @return
+     */
     public byte[] getKeyEncoded() {
         return publicKey.getEncoded();
     }
 
+    /**
+     *
+     * @return
+     */
     public java.security.PublicKey getKey() {
         return publicKey;
     }
-
-   /* public void setKey(java.security.PublicKey key) {
-        this.publicKey = key;
-    }*/
 }

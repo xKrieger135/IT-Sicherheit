@@ -5,7 +5,9 @@ import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PrivateKey;
 import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
 import de.haw.rsa.sendsecurefile.accesslayer.interfaces.ISendSecureFile;
 import de.haw.rsa.sendsecurefile.businesslogiclayer.SendSecureFileBusinessLogic;
+import de.haw.rsa.sendsecurefile.dataaccesslayer.entities.AESKey;
 
+import javax.crypto.SecretKey;
 import java.io.File;
 
 /**
@@ -23,14 +25,15 @@ public class SendSecureFileFassade implements ISendSecureFile {
     public byte[] encryptFileWithAES(String privateKeyFile, String publicKeyFile, String file) {
         PublicKey publicKey = sendSecureFileBusinessLogic.getPublicKey(publicKeyFile);
         PrivateKey privateKey = sendSecureFileBusinessLogic.getPrivateKey(privateKeyFile);
-        return sendSecureFileBusinessLogic.encryptFile(publicKey, privateKey, file);
+        AESKey aesKey = sendSecureFileBusinessLogic.createSecretAESKey();
+        return sendSecureFileBusinessLogic.encryptFile(publicKey, privateKey, aesKey, file);
     }
 
-    public void writeToFile(String outputFile, String publicKeyFile, String privateKeyFile) {
+    public void writeToFile(String inputFile, String outputFile, String publicKeyFile, String privateKeyFile) {
         PublicKey publicKey = sendSecureFileBusinessLogic.getPublicKey(publicKeyFile);
         PrivateKey privateKey = sendSecureFileBusinessLogic.getPrivateKey(privateKeyFile);
 
-        sendSecureFileBusinessLogic.writeToFile(outputFile, publicKey, privateKey);
+        sendSecureFileBusinessLogic.writeToFile(inputFile, outputFile, publicKey, privateKey);
 
     }
 }

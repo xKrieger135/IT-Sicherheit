@@ -9,15 +9,16 @@ import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
 public interface IRSACreation {
 
     /**
-     * This method will create a keypair for the given keyPairCreationAlgorithm.
-     * The given algorithm should be the RSA Algorithm for this case.
      *
-     * @param keyPairCreationAlgorithm This is the algorithm, which will be used to create the keyPair.
-     * @return Returns a KeyPair which contains the public and private key for the RSA algorithm.
+     * @param publicKeyOwner
+     * @return
      */
-    //KeyPair createRSAKeyPair(String keyPairCreationAlgorithm);
-
     PublicKey createPublicKey(String publicKeyOwner);
 
+    /**
+     *
+     * @param privateKeyOwner
+     * @return
+     */
     PrivateKey createPrivateKey(String privateKeyOwner);
 }
