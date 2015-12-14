@@ -1,12 +1,12 @@
 package de.haw.rsa.sendsecurefile.accesslayer;
 
 import de.haw.rsa.rsaadapter.adapter.RSAKeyReaderAdapter;
+import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PrivateKey;
+import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
 import de.haw.rsa.sendsecurefile.accesslayer.interfaces.ISendSecureFile;
 import de.haw.rsa.sendsecurefile.businesslogiclayer.SendSecureFileBusinessLogic;
 
 import java.io.File;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 
 /**
  * Created by Patrick Steinhauer

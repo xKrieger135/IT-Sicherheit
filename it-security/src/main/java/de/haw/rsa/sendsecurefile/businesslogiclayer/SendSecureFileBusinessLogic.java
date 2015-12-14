@@ -1,13 +1,18 @@
 package de.haw.rsa.sendsecurefile.businesslogiclayer;
 
 import de.haw.rsa.rsaadapter.adapter.RSAKeyReaderAdapter;
+import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PrivateKey;
+import de.haw.rsa.rsakeycreation.dataaccesslayer.entities.PublicKey;
 import de.haw.rsa.sendsecurefile.dataaccesslayer.entities.AESKey;
 import de.haw.rsa.sendsecurefile.dataaccesslayer.entities.RSASignature;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
-import java.security.*;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.Signature;
+import java.security.SignatureException;
 
 /**
  * Created by Patrick Steinhauer
@@ -47,7 +52,7 @@ public class SendSecureFileBusinessLogic {
         try {
             signature = Signature.getInstance("SHA256withRSA");
             // Signature should be realized with the private key
-            signature.initSign(privateKey);
+            signature.initSign(privateKey.getKey());
             // The given data should be signed
             signature.update(secretKey.getSecretKey());
 
@@ -69,9 +74,10 @@ public class SendSecureFileBusinessLogic {
         AESKey aesKey = inputAESKey;
         try {
             Cipher cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey.getKey());
 
             aesKey.setSecretKeyEncrypted(cipher.doFinal());
+            aesKey.setAlgorithmParameters(cipher.getParameters());
 
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -88,12 +94,12 @@ public class SendSecureFileBusinessLogic {
         return aesKey;
     }
 
-    public java.security.PublicKey getPublicKey(String fileName) {
-        return rsaKeyReaderAdapter.readPublicKey(fileName).getKey();
+    public PublicKey getPublicKey(String fileName) {
+        return rsaKeyReaderAdapter.readPublicKey(fileName);
     }
 
     public PrivateKey getPrivateKey(String fileName) {
-        return rsaKeyReaderAdapter.readPrivateKey(fileName).getKey();
+        return rsaKeyReaderAdapter.readPrivateKey(fileName);
     }
 
     public byte[] encryptFile(PublicKey publicKey, PrivateKey privateKey, String file) {
