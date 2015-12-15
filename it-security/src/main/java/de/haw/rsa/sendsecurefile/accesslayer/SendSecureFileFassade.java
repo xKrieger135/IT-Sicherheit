@@ -34,6 +34,5 @@ public class SendSecureFileFassade implements ISendSecureFile {
         PrivateKey privateKey = sendSecureFileBusinessLogic.getPrivateKey(privateKeyFile);
 
         sendSecureFileBusinessLogic.writeToFile(inputFile, outputFile, publicKey, privateKey);
-
     }
 }

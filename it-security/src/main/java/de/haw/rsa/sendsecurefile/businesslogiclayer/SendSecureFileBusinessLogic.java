@@ -41,6 +41,7 @@ public class SendSecureFileBusinessLogic {
 
             secretAESKey = keyGenerator.generateKey();
 
+            // save also the secret key for encrypt aeskey
             aesKey.setsKey(secretAESKey);
             aesKey.setAlgorithm(secretAESKey.getAlgorithm());
             aesKey.setSecretKey(secretAESKey.getEncoded());
@@ -97,8 +98,12 @@ public class SendSecureFileBusinessLogic {
         try {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey.getKey());
+
+            // nun werden die Daten verschluesselt
+            // (update wird bei grossen Datenmengen mehrfach aufgerufen werden!)
             byte[] sinnvollerName = cipher.update(aesKey.getSecretKey());
 
+            // mit doFinal abschliessen (Rest inkl. Padding ..)
             aesKey.setSecretKeyEncrypted(concatenate(sinnvollerName , cipher.doFinal()));
             aesKey.setAlgorithmParameters(cipher.getParameters());
 
@@ -158,18 +163,18 @@ public class SendSecureFileBusinessLogic {
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(inputFile));
             Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
 
-            System.out.println("SECRET KEY = " + aesKey.getsKey());
+            // Initialisierung zur Verschluesselung mit automatischer
+            // Parametererzeugung
             cipher.init(Cipher.ENCRYPT_MODE, secretKey.getsKey());
 
             params = cipher.getParameters().getEncoded();
-
-            System.out.println("Params = " + params);
 
             int length = (int) newFile.length();
             byte[] buffer = new byte[length];
             dataInputStream.read(buffer, 0, length);
             dataInputStream.close();
 
+            // mit doFinal abschliessen (Rest inkl. Padding ..)
             result = cipher.doFinal(buffer);
 
 
@@ -226,9 +231,6 @@ public class SendSecureFileBusinessLogic {
             int lengthOfSignature = rsaSignature.getSignature().length;
             int lengthOfAlgorithmParameters = parameters.length;
 
-            System.out.println("L: " + lengthOfSecretEncryptedAESKey);
-            System.out.println("D: " + Arrays.toString(key));
-
             output.writeInt(lengthOfSecretEncryptedAESKey);
             output.write(key);
             output.writeInt(lengthOfSignature);
@@ -236,7 +238,6 @@ public class SendSecureFileBusinessLogic {
             output.writeInt(lengthOfAlgorithmParameters);
             output.write(parameters);
             output.write(encryptedFile);
-            System.out.println("DONE");
 
             output.close();
 
@@ -246,6 +247,7 @@ public class SendSecureFileBusinessLogic {
             e.printStackTrace();
         }
     }
+
     private byte[] concatenate(byte[] ba1, byte[] ba2) {
         int len1 = ba1.length;
         int len2 = ba2.length;
