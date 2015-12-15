@@ -86,12 +86,13 @@ public class ReceiveSecureFileBusinessLogic {
             DataInputStream inputStream = new DataInputStream(new FileInputStream(encryptedFile));
             DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(outputFile));
 
-            Cipher cipher = Cipher.getInstance("AES");
+            Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
 
             AlgorithmParameters algorithmParameters = AlgorithmParameters.getInstance("AES");
             algorithmParameters.init(ssf.getAlgorithmicParameters());
 
             System.out.println("SecretKey: "+ Arrays.toString(aesKey.getSecretKey()));
+            System.out.println("AParam: "+ Arrays.toString(ssf.getAlgorithmicParameters()));
 
             SecretKeySpec keySpec = new SecretKeySpec(aesKey.getSecretKey(), "AES");
             cipher.init(Cipher.DECRYPT_MODE, keySpec,algorithmParameters);
@@ -101,7 +102,9 @@ public class ReceiveSecureFileBusinessLogic {
             inputStream.read(buffer);
             inputStream.close();
 
-            outputStream.write(cipher.doFinal(buffer));
+            outputStream.write(cipher.update(buffer));
+
+            outputStream.close();
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -112,10 +115,6 @@ public class ReceiveSecureFileBusinessLogic {
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
             e.printStackTrace();
         } catch (InvalidAlgorithmParameterException e) {
             e.printStackTrace();
