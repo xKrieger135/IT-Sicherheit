@@ -42,7 +42,7 @@ public class ReceiveSecureFileBusinessLogic {
         decryptFile(inputFile, outputFile, aesKey, ssfFile);
 
         System.out.println("Verify:");
-        Boolean r = verifyFileSignature(ssfFile, publicKey);
+        Boolean r = verifyFileSignature(ssfFile, publicKey, aesKey);
 
         System.out.println("v " + r);
     }
@@ -83,7 +83,7 @@ public class ReceiveSecureFileBusinessLogic {
 
     private void decryptFile(File encryptedFile, File outputFile, AESKey aesKey, SendSecureFile ssf) {
         try {
-            DataInputStream inputStream = new DataInputStream(new FileInputStream(encryptedFile));
+//            DataInputStream inputStream = new DataInputStream(new FileInputStream(encryptedFile));
             DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(outputFile));
 
             Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
@@ -97,12 +97,13 @@ public class ReceiveSecureFileBusinessLogic {
             SecretKeySpec keySpec = new SecretKeySpec(aesKey.getSecretKey(), "AES");
             cipher.init(Cipher.DECRYPT_MODE, keySpec,algorithmParameters);
 
-            int length = (int) encryptedFile.length();
-            byte[] buffer = new byte[length];
-            inputStream.read(buffer);
-            inputStream.close();
+//            int length = (int) encryptedFile.length();
+            byte[] buffer = ssf.getEncryptedData();
+//            byte[] buffer = new byte[length];
+//            inputStream.read(buffer);
+//            inputStream.close();
 
-            outputStream.write(cipher.update(buffer));
+            outputStream.write(cipher.doFinal(buffer));
 
             outputStream.close();
 
@@ -118,14 +119,19 @@ public class ReceiveSecureFileBusinessLogic {
             e.printStackTrace();
         } catch (InvalidAlgorithmParameterException e) {
             e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
         }
     }
 
-    private Boolean verifyFileSignature(SendSecureFile ssfFile, PublicKey publicKey) {
+    private Boolean verifyFileSignature(SendSecureFile ssfFile, PublicKey publicKey, AESKey aesKey) {
         Boolean result=false;
         try {
             Signature signature = Signature.getInstance("SHA256withRSA");
             signature.initVerify(publicKey.getKey());
+            signature.update(aesKey.getSecretKey());
             result = signature.verify(ssfFile.getSignature());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

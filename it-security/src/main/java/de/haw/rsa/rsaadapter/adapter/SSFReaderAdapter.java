@@ -32,7 +32,7 @@ public class SSFReaderAdapter {
             algorithmicParameters = new byte[algorithmParamLenght];
             fstream.read(algorithmicParameters);
 
-            int dataLength = (int) file.length()-secretKeyLenght-signatureLength-algorithmParamLenght;
+            int dataLength = (int) file.length()-secretKeyLenght-signatureLength-algorithmParamLenght-3;
             encryptedData = new byte[dataLength];
             fstream.read(encryptedData);
 
