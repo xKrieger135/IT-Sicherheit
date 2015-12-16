@@ -66,11 +66,12 @@ public class SendSecureFileBusinessLogic {
 
         try {
             signature = Signature.getInstance("SHA256withRSA");
-            // Signature should be realized with the private key
+            // Signature should be realized with the private key. Also initialize here to sign the signature
             signature.initSign(privateKey.getKey());
             // The given data should be signed
             signature.update(secretKey.getSecretKey());
 
+            // sign the updated data at step before and save into our own datastructure
             rsaSignature.setSignature(signature.sign());
             rsaSignature.setAlgorithm(signature.getAlgorithm());
             rsaSignature.setProvider(signature.getProvider());
@@ -161,6 +162,7 @@ public class SendSecureFileBusinessLogic {
         try {
 
             DataInputStream dataInputStream = new DataInputStream(new FileInputStream(inputFile));
+            // NoPadding because CTR does not need a padding
             Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
 
             // Initialisierung zur Verschluesselung mit automatischer
