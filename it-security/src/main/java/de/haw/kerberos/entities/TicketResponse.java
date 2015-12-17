@@ -1,10 +1,8 @@
 package de.haw.kerberos.entities;
 
 /* Simulation einer Kerberos-Session mit Zugriff auf einen Fileserver
- /* TicketResponse-Klasse
+ * TicketResponse-Klasse
  */
-
-import de.haw.kerberos.entities.Ticket;
 
 public class TicketResponse extends Object {
 

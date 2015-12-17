@@ -42,35 +42,35 @@ public class Ticket extends Object {
 
 	public String getClientName() {
 		if (isEncryptedState) {
-			printError("Zugriff auf verschl�sseltes Ticket (getClientName)");
+			printError("Zugriff auf verschluesseltes Ticket (getClientName)");
 		}
 		return myClientName;
 	}
 
 	public String getServerName() {
 		if (isEncryptedState) {
-			printError("Zugriff auf verschl�sseltes Ticket (getServerName)");
+			printError("Zugriff auf verschluesseltes Ticket (getServerName)");
 		}
 		return myServerName;
 	}
 
 	public long getStartTime() {
 		if (isEncryptedState) {
-			printError("Zugriff auf verschl�sseltes Ticket (getStartTime)");
+			printError("Zugriff auf verschluesseltes Ticket (getStartTime)");
 		}
 		return myStartTime;
 	}
 
 	public long getEndTime() {
 		if (isEncryptedState) {
-			printError("Zugriff auf verschl�sseltes Ticket (getEndTime)");
+			printError("Zugriff auf verschluesseltes Ticket (getEndTime)");
 		}
 		return myEndTime;
 	}
 
 	public long getSessionKey() {
 		if (isEncryptedState) {
-			printError("Zugriff auf verschl�sseltes Ticket (getSessionKey)");
+			printError("Zugriff auf verschluesseltes Ticket (getSessionKey)");
 		}
 		return mySessionKey;
 	}
@@ -80,7 +80,7 @@ public class Ticket extends Object {
 		// Falls das Ticket bereits verschluesselt ist, wird false zurueckgegeben.
 		boolean encOK = false;
 		if (isEncryptedState) {
-			printError("Ticket ist bereits verschl�sselt");
+			printError("Ticket ist bereits verschluesselt");
 		} else {
 			myTicketKey = key;
 			isEncryptedState = true;
@@ -95,10 +95,10 @@ public class Ticket extends Object {
 		// falls das Ticket bereits entschluesselt ist, wird false zurueckgegeben.
 		boolean decOK = false;
 		if (!isEncryptedState) {
-			printError("Ticket ist bereits entschl�sselt");
+			printError("Ticket ist bereits entschluesselt");
 		}
 		if (myTicketKey != key) {
-			printError("Ticket-Entschl�sselung mit key " + key
+			printError("Ticket-Entschluesselung mit key " + key
 					+ " ist fehlgeschlagen");
 		} else {
 			isEncryptedState = false;

@@ -62,7 +62,7 @@ public class KerberosSim {
 
 		/* -------- Benutzersession simulieren ------ */
 		// Passwort vom Benutzer holen
-		System.out.println("Starte Login-Session f�r Benutzer: " + userName);
+		System.out.println("Starte Login-Session fuer Benutzer: " + userName);
 		password = thisSession.readPasswd(userName);
 		if (password != null) {
 
