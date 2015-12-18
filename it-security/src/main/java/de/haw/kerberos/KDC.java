@@ -107,9 +107,52 @@ public class KDC extends Object {
 	 * ****************************
 	 */
 
+	/**
+	 * This method requests a new serverTicket for the given Data.
+	 * The message Data (Ticket and Auth are encrypted).
+	 * Check that the time is valid, the servername from ticket is the same like the given and, that
+	 * The client is the original client.
+	 *
+	 * @param tgsTicket   This is the ticket from TGS for the client (encrypted).
+	 * @param tgsAuth     This is the authentication (encrypted).
+	 * @param serverName  This is the name from the server to which we will connect.
+	 * @param nonce       A generated "Einmalstempel"
+     * @return            Returns a new ticketResponse.
+     */
 	public TicketResponse requestServerTicket(Ticket tgsTicket, Auth tgsAuth, String serverName, long nonce) {
-				/* ToDo : This is only to remove error*/
-		return new TicketResponse(1,1,null);
+
+		TicketResponse ticketResponse = null;
+		Ticket serverTicket = null;
+		long currentTime = 0;
+
+		// Nur diese Klasse kennt den tgsKey, deswegen hier entschluesseln!
+		tgsTicket.decrypt(tgsKey);
+		tgsAuth.decrypt(tgsSessionKey);
+
+		// Check if serverName from ticket and given serverName are the same
+		// Also we have to check that time from ticket is yet also valid
+		// check that auth currenttime is valid (this check is to safe the authentication)
+		if (tgsTicket.getServerName().equals(serverName)
+				&& timeValid(tgsTicket.getStartTime(), tgsTicket.getEndTime())
+				&& timeFresh(tgsAuth.getCurrentTime())
+				&& tgsTicket.getClientName().equals(user)) {
+
+			serverSessionKey = generateSimpleKey();
+
+			currentTime = new Date().getTime();
+
+			// Create new serverTicket which will be accepted for 10 hours! Use here ServerSessionKey K(C, S)
+			serverTicket = new Ticket(user, serverName, currentTime, currentTime + tenHoursInMillis, serverSessionKey);
+
+			// Now we will encrypt the serverTicket
+			serverTicket.encrypt(tgsKey);
+
+			ticketResponse = new TicketResponse(serverSessionKey, nonce, serverTicket);
+
+			ticketResponse.encrypt(tgsSessionKey);
+		}
+
+		return ticketResponse;
 	}
 
 	/* *********** Hilfsmethoden **************************** */

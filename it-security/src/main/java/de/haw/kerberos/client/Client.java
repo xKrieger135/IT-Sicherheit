@@ -10,6 +10,8 @@ import de.haw.kerberos.entities.TicketResponse;
 import de.haw.kerberos.server.Server;
 import de.haw.kerberos.entities.Ticket;
 
+import java.util.Date;
+
 public class Client extends Object {
 
 	private KDC myKDC = null; // Konstruktor-Parameter
@@ -43,6 +45,7 @@ public class Client extends Object {
 				ticketResponse.print();
 				tgsSessionKey = ticketResponse.getSessionKey();
 				tgsTicket = ticketResponse.getResponseTicket();
+				tgsTicket.decrypt(nonce);
 				currentUser = userName;
 				login = true;
 			}
@@ -54,15 +57,24 @@ public class Client extends Object {
 	public boolean showFile(Server fileServer, String filePath) {
 		boolean canShowFile = false;
 		TicketResponse ticketResponse = null;
+		long nonce = generateNonce();
 		Auth auth = null;
 
 		if (tgsTicket != null) {
+//			tgsTicket.decrypt();
 			if (tgsServerTicket == null) {
-				// TODO: auth zweiter parameter ist falsch!
-				auth = new Auth(tgsTicket.getClientName(), tgsTicket.getStartTime());
-				ticketResponse = myKDC.requestServerTicket(tgsTicket, auth, tgsTicket.getServerName(), generateNonce());
-			} else {
+				System.out.println("++++++++++ Create new auth and encrypt! ++++++++++");
+				auth = new Auth(currentUser, new Date().getTime());
+				auth.encrypt(tgsSessionKey);
+				auth.print();
 
+				ticketResponse = myKDC.requestServerTicket(tgsTicket, auth, fileServer.getName(), nonce);
+
+				ticketResponse.print();
+
+				fileServer.requestService(ticketResponse.getResponseTicket(), auth, "showFile", filePath);
+
+				canShowFile = true;
 			}
 		}
 
