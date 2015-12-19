@@ -73,11 +73,13 @@ public class PasswordDialog extends JDialog {
 		JButton okButton = new JButton(okLabel);
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-					status = true;
-					closeDialog();
+				status = true;
+				closeDialog();
 			}
 		});
 		buttonPanel.add(okButton);
+		// This will made it possible to use OK with enter and not with mouse-click
+		getRootPane().setDefaultButton(okButton);
 
 		// Abbrechen-Button
 		JButton cancelButton = new JButton(cancelLabel);
@@ -98,7 +100,7 @@ public class PasswordDialog extends JDialog {
 	}
 
 	private void closeDialog() {
-		// Fenster schlie�en
+		// Fenster schliessen
 		setVisible(false);
 		dispose();
 	}
