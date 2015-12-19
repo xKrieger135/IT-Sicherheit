@@ -132,7 +132,7 @@ public class KDC extends Object {
 		// Check if serverName from ticket and given serverName are the same
 		// Also we have to check that time from ticket is yet also valid
 		// check that auth currenttime is valid (this check is to safe the authentication)
-		if (tgsTicket.getServerName().equals(serverName)
+		if (serverName.equals(this.serverName)
 				&& timeValid(tgsTicket.getStartTime(), tgsTicket.getEndTime())
 				&& timeFresh(tgsAuth.getCurrentTime())
 				&& tgsTicket.getClientName().equals(user)) {

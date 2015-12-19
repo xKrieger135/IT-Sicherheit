@@ -40,7 +40,7 @@ public class Server extends Object {
 
 	public boolean requestService(Ticket srvTicket, Auth srvAuth,
 								  String command, String parameter) {
-			/* ToDo : This is only to remove error */
+
 		return false;
 	}
 

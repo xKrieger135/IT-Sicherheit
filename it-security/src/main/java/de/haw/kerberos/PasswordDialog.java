@@ -73,8 +73,8 @@ public class PasswordDialog extends JDialog {
 		JButton okButton = new JButton(okLabel);
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				status = true;
-				closeDialog();
+					status = true;
+					closeDialog();
 			}
 		});
 		buttonPanel.add(okButton);

@@ -45,7 +45,6 @@ public class Client extends Object {
 				ticketResponse.print();
 				tgsSessionKey = ticketResponse.getSessionKey();
 				tgsTicket = ticketResponse.getResponseTicket();
-				tgsTicket.decrypt(nonce);
 				currentUser = userName;
 				login = true;
 			}
@@ -61,7 +60,6 @@ public class Client extends Object {
 		Auth auth = null;
 
 		if (tgsTicket != null) {
-//			tgsTicket.decrypt();
 			if (tgsServerTicket == null) {
 				System.out.println("++++++++++ Create new auth and encrypt! ++++++++++");
 				auth = new Auth(currentUser, new Date().getTime());
@@ -70,7 +68,10 @@ public class Client extends Object {
 
 				ticketResponse = myKDC.requestServerTicket(tgsTicket, auth, fileServer.getName(), nonce);
 
+				System.out.println("Ticketresponse: " + ticketResponse);
 				ticketResponse.print();
+
+				ticketResponse.decrypt(tgsSessionKey);
 
 				fileServer.requestService(ticketResponse.getResponseTicket(), auth, "showFile", filePath);
 
