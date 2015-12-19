@@ -18,7 +18,7 @@ public class Server extends Object {
 
 	private String myName; // Konstruktor-Parameter
 	private KDC myKDC; // wird bei KDC-Registrierung gespeichert
-	private long myKey; // wird bei KDC-Registrierung gespeichert
+	private long myKey; // wird bei KDC-Registrierung gespeichert K(S)
 
 	// Konstruktor
 	public Server(String name) {
@@ -38,10 +38,26 @@ public class Server extends Object {
 				+ " mit ServerKey " + myKey);
 	}
 
-	public boolean requestService(Ticket srvTicket, Auth srvAuth,
+	public boolean requestService(Ticket serverTicket, Auth serverAuthentication,
 								  String command, String parameter) {
 
-		return false;
+		boolean canRequestService = false;
+		serverTicket.decrypt(myKey);
+		serverTicket.print();
+
+		if (serverTicket.getServerName().equals(myName)
+				&& timeValid(serverTicket.getStartTime(), serverTicket.getEndTime())
+				&& timeFresh(serverAuthentication.getCurrentTime())
+				&& serverAuthentication.getClientName().equals(serverTicket.getClientName())) {
+
+			if (command.equals("showFile")) {
+				canRequestService = showFile(parameter);
+			} else {
+				System.out.println("This command is not a valid command for the server!");
+			}
+		}
+
+		return canRequestService;
 	}
 
 	/* *********** Services **************************** */

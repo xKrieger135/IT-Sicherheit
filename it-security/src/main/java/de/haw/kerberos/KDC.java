@@ -144,8 +144,8 @@ public class KDC extends Object {
 			// Create new serverTicket which will be accepted for 10 hours! Use here ServerSessionKey K(C, S)
 			serverTicket = new Ticket(user, serverName, currentTime, currentTime + tenHoursInMillis, serverSessionKey);
 
-			// Now we will encrypt the serverTicket
-			serverTicket.encrypt(tgsKey);
+			// Now we will encrypt the serverTicket with ServerKey K(S)
+			serverTicket.encrypt(serverKey);
 
 			ticketResponse = new TicketResponse(serverSessionKey, nonce, serverTicket);
 
